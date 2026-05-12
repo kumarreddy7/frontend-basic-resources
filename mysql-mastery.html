@@ -1,0 +1,3434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySQL Mastery — TechMart Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05080f;
+  --sb:#080c16;
+  --card:#0b1120;
+  --card2:#0e1628;
+  --border:#182035;
+  --border2:#1e2d48;
+  --acc:#f97316;
+  --acc2:#fb923c;
+  --text:#b8c6e0;
+  --dim:#4a5a78;
+  --bright:#e8f0ff;
+  --green:#22c55e;
+  --blue:#3b82f6;
+  --purple:#a78bfa;
+  --red:#f87171;
+  --yellow:#fbbf24;
+  --code:#030710;
+  --kw:#ff7b72;
+  --fn:#d2a8ff;
+  --str:#a5d6ff;
+  --num:#79c0ff;
+  --cmt:#556880;
+  --type:#f2cc60;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex}
+
+/* ─── SIDEBAR ─── */
+#sb{width:252px;background:var(--sb);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.sb-head{padding:18px 14px 14px;border-bottom:1px solid var(--border)}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sb-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.sb-title{font-size:15px;font-weight:800;color:var(--bright);letter-spacing:-.3px}
+.sb-sub{font-size:10px;color:var(--dim);margin-top:1px;font-weight:400}
+.pb-wrap{background:var(--border);border-radius:100px;height:5px;overflow:hidden;margin-bottom:4px}
+.pb{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:100px;transition:width .4s ease;width:0%}
+.pb-label{font-size:10px;color:var(--dim);text-align:right;font-family:'JetBrains Mono',monospace}
+.sb-scroll{overflow-y:auto;flex:1;padding:8px 0}
+.sb-scroll::-webkit-scrollbar{width:3px}
+.sb-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.sb-group{padding:10px 14px 4px;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.sb-item{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;border-left:2px solid transparent;transition:all .15s;color:var(--dim);font-size:12px;font-weight:500}
+.sb-item:hover{background:rgba(249,115,22,.06);color:var(--text);border-left-color:rgba(249,115,22,.3)}
+.sb-item.active{background:rgba(249,115,22,.1);border-left-color:var(--acc);color:var(--bright);font-weight:700}
+.sb-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);min-width:16px}
+.sb-done{color:var(--green);font-size:11px;margin-left:auto;flex-shrink:0}
+
+/* ─── MAIN ─── */
+#main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+#main::-webkit-scrollbar{width:5px}
+#main::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+.t-head{position:sticky;top:0;z-index:20;background:rgba(5,8,15,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:18px 30px;display:flex;align-items:center;gap:14px}
+.t-emoji{font-size:30px;line-height:1}
+.t-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--acc);margin-bottom:3px;font-family:'JetBrains Mono',monospace}
+.t-name{font-size:22px;font-weight:800;color:var(--bright);letter-spacing:-.4px}
+.t-nav{margin-left:auto;display:flex;gap:8px}
+.nav-btn{background:var(--card);border:1px solid var(--border2);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:'Sora',sans-serif;font-weight:600;transition:all .15s}
+.nav-btn:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.nav-btn:disabled{opacity:.25;cursor:not-allowed}
+
+.t-body{padding:26px 30px 56px;max-width:860px}
+
+/* ─── DEFINITION ─── */
+.def-card{background:linear-gradient(135deg,rgba(249,115,22,.07),rgba(251,146,60,.03));border:1px solid rgba(249,115,22,.22);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;align-items:flex-start;gap:10px}
+.def-ic{font-size:18px;flex-shrink:0;margin-top:1px}
+.def-txt{font-size:14px;color:var(--bright);line-height:1.65}
+
+/* ─── SECTION LABELS ─── */
+.sec{margin-bottom:24px}
+.sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ─── CODE BLOCKS ─── */
+pre{background:var(--code);border:1px solid var(--border2);border-radius:10px;padding:18px 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;position:relative;color:#c9d1d9}
+pre .lbl{position:absolute;top:9px;right:13px;font-size:9px;color:var(--dim);font-family:'Sora',sans-serif;text-transform:uppercase;letter-spacing:.12em}
+.kw{color:var(--kw);font-weight:600}
+.fn{color:var(--fn)}
+.str{color:var(--str)}
+.nm{color:var(--num)}
+.cmt{color:var(--cmt);font-style:italic}
+.tp{color:var(--type)}
+.tb{color:#ffa657}
+.op{color:#ff7b72}
+
+/* ─── USE CASE ─── */
+.uc{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.75}
+.uc strong{color:var(--green)}
+.uc em{color:#86efac;font-style:normal;font-weight:600}
+
+/* ─── CONNECT NOTE ─── */
+.cnote{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);border-radius:8px;padding:9px 13px;font-size:11.5px;color:#93c5fd;margin-bottom:14px;display:flex;gap:8px;align-items:center;line-height:1.5}
+
+/* ─── ACID GRID ─── */
+.acid-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px}
+.acid-card{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:16px}
+.acid-letter{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.acid-name{font-size:13px;font-weight:700;color:var(--bright);margin:4px 0 6px}
+.acid-one{font-size:12px;color:var(--acc);font-weight:600;margin-bottom:4px;font-family:'JetBrains Mono',monospace}
+.acid-def{font-size:12px;color:var(--text);line-height:1.6}
+
+/* ─── NORMALIZATION ─── */
+.nf-row{display:grid;grid-template-columns:80px 1fr;gap:0;margin-bottom:12px;border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+.nf-tag{background:rgba(249,115,22,.12);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--acc);padding:12px}
+.nf-body{padding:10px 14px;background:var(--card2)}
+.nf-rule{font-size:12px;font-weight:700;color:var(--bright);margin-bottom:3px}
+.nf-desc{font-size:11.5px;color:var(--text);line-height:1.5}
+
+/* ─── ISOLATION TABLE ─── */
+.iso-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px}
+.iso-table th{background:var(--card2);color:var(--bright);padding:8px 12px;text-align:left;border:1px solid var(--border2);font-weight:700}
+.iso-table td{padding:8px 12px;border:1px solid var(--border2);color:var(--text)}
+.iso-table tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.tick{color:var(--green)}
+.cross{color:var(--red)}
+
+/* ─── SCHEMA BADGE ─── */
+.schema-strip{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);line-height:1.8}
+.schema-strip span{color:var(--acc2)}
+</style>
+</head>
+<body>
+
+<div id="sb">
+  <div class="sb-head">
+    <div class="sb-logo">
+      <div class="sb-icon">🐬</div>
+      <div>
+        <div class="sb-title">MySQL Mastery</div>
+        <div class="sb-sub">TechMart Connected Series</div>
+      </div>
+    </div>
+    <div class="pb-wrap"><div class="pb" id="pb"></div></div>
+    <div class="pb-label" id="pb-label">0 / 21 topics</div>
+  </div>
+  <div class="sb-scroll" id="sb-list"></div>
+</div>
+
+<div id="main">
+  <div id="content"></div>
+</div>
+
+<script>
+// ─── Syntax highlighter (line-by-line to avoid nesting issues) ───
+function hl(code) {
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return code.split('\n').map(line => {
+    const e = esc(line);
+    if (e.trim().startsWith('--')) return `<span class="cmt">${e}</span>`;
+    const ci = e.indexOf('--');
+    let main = ci >= 0 ? e.slice(0, ci) : e;
+    const comment = ci >= 0 ? `<span class="cmt">${e.slice(ci)}</span>` : '';
+    main = main
+      .replace(/'[^']*'/g, m => `<span class="str">${m}</span>`)
+      .replace(/\b(COUNT|SUM|AVG|MIN|MAX|IFNULL|COALESCE|CONCAT|SUBSTRING|UPPER|LOWER|TRIM|NOW|CURDATE|ROUND|FLOOR|CEIL|ABS|LENGTH|DATE_SUB|DATE_ADD|DATEDIFF|LAST_INSERT_ID|GROUP_CONCAT|CAST|CONVERT|ISNULL|NULLIF|YEAR|MONTH|DAY)\s*(?=\()/gi,
+             m => `<span class="fn">${m}</span>`)
+      .replace(/\b(SELECT|FROM|WHERE|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DATABASE|USE|DROP|ALTER|ADD|COLUMN|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|CROSS|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|DISTINCT|AS|AND|OR|NOT|IN|LIKE|BETWEEN|IS NULL|IS NOT NULL|EXISTS|CASE|WHEN|THEN|ELSE|END|INDEX|VIEW|TRIGGER|PROCEDURE|FUNCTION|BEGIN|COMMIT|ROLLBACK|START TRANSACTION|SAVEPOINT|AFTER|BEFORE|FOR EACH ROW|CALL|RETURN|RETURNS|IF|DECLARE|DELIMITER|AUTO_INCREMENT|UNIQUE|CHECK|DEFAULT|CONSTRAINT|PRIMARY KEY|FOREIGN KEY|REFERENCES|ON DELETE|ON UPDATE|CASCADE|SET NULL|RESTRICT|SHOW|EXPLAIN|DESCRIBE|TRUNCATE|RENAME|MODIFY|ENGINE|CHARSET|INTERVAL|ASC|DESC|BY)\b/gi,
+             m => `<span class="kw">${m}</span>`)
+      .replace(/\b(INT|TINYINT|SMALLINT|BIGINT|VARCHAR|CHAR|TEXT|LONGTEXT|MEDIUMTEXT|DECIMAL|FLOAT|DOUBLE|BOOLEAN|BOOL|DATE|DATETIME|TIMESTAMP|ENUM|JSON)\b/gi,
+             m => `<span class="tp">${m}</span>`)
+      .replace(/\b(\d+\.?\d*)\b/g, m => `<span class="nm">${m}</span>`);
+    return main + comment;
+  }).join('\n');
+}
+
+function pre(code, lbl='SQL') {
+  return `<pre><span class="lbl">${lbl}</span>${hl(code)}</pre>`;
+}
+
+const SCHEMA = `<div class="schema-strip">📎 TechMart Schema &nbsp;|&nbsp; <span>customers</span>(id, name, email, city, created_at) &nbsp;·&nbsp; <span>products</span>(id, name, category, price, stock) &nbsp;·&nbsp; <span>orders</span>(id, customer_id, total, status, created_at) &nbsp;·&nbsp; <span>order_items</span>(id, order_id, product_id, quantity, price)</div>`;
+
+const CNOTE = `<div class="cnote">🔗 All examples run against the same <strong>TechMart</strong> database built from Topic 1 onward — every query is production-connected.</div>`;
+
+// ─── TOPIC DATA ───────────────────────────────────────────────────────────────
+const topics = [
+{
+  id:0, g:'Overview', emoji:'📚', title:'SQL Command Categories — DDL · DML · DQL · DCL · TCL',
+  def:'SQL is divided into 5 sub-languages by purpose — DDL shapes database structure, DML manipulates rows, DQL reads data, DCL controls access permissions, and TCL manages transaction boundaries. Every SQL statement you will ever write belongs to exactly one of these five.',
+  syntax: pre(`-- ══ 1. DDL — Data Definition Language ═══════════════════════════════════
+-- Defines or MODIFIES DATABASE STRUCTURE (schema objects, not rows).
+-- ⚠ KEY RULE: DDL auto-commits immediately — it CANNOT be rolled back.
+
+CREATE   -- create a new object
+         CREATE DATABASE   db_name
+         CREATE TABLE      table_name (col definitions, constraints)
+         CREATE INDEX      idx_name ON table(col)
+         CREATE VIEW       view_name AS SELECT ...
+         CREATE PROCEDURE  proc_name() BEGIN ... END
+         CREATE FUNCTION   fn_name() RETURNS type BEGIN ... END
+         CREATE TRIGGER    trg_name BEFORE|AFTER event ON table FOR EACH ROW
+         CREATE EVENT      evt_name ON SCHEDULE ... DO ...
+         CREATE USER       'user'@'host' IDENTIFIED BY 'pwd'
+
+ALTER    -- modify an existing object without dropping it
+         ALTER TABLE  (ADD|DROP|MODIFY COLUMN, ADD CONSTRAINT, ADD INDEX ...)
+         ALTER USER   'user'@'host' IDENTIFIED BY 'newpwd'
+
+DROP     -- permanently destroy an object AND all its data
+         DROP DATABASE | TABLE | VIEW | INDEX
+         DROP PROCEDURE | FUNCTION | TRIGGER | EVENT | USER
+
+TRUNCATE -- remove ALL rows instantly; resets AUTO_INCREMENT
+         TRUNCATE TABLE table_name
+         -- Classified as DDL (auto-commits) despite removing rows
+
+RENAME   -- rename a table
+         RENAME TABLE old_name TO new_name
+
+-- ══ 2. DML — Data Manipulation Language ══════════════════════════════════
+-- Manipulates ROWS inside tables (not structure).
+-- ✅ KEY RULE: DML participates in transactions → can be ROLLBACK-ed.
+
+INSERT   -- add new rows
+         INSERT INTO table (col1, col2) VALUES (v1, v2), (v3, v4);
+         INSERT INTO table SELECT ...;           -- from another table
+
+UPDATE   -- modify existing rows
+         UPDATE table SET col1 = val1 WHERE condition;
+
+DELETE   -- remove specific rows (logged, triggers fire, can rollback)
+         DELETE FROM table WHERE condition;
+
+REPLACE  -- DELETE matching unique key row, then INSERT anew (upsert)
+         REPLACE INTO table (cols) VALUES (...);
+
+-- ══ 3. DQL — Data Query Language ════════════════════════════════════════
+-- READS data. Read-only — never modifies any row or structure.
+-- Note: many sources fold DQL into DML; treating it separately is cleaner.
+
+SELECT   -- retrieve rows from one or more tables / views / subqueries
+  SELECT  col_list | * | expressions | aggregates
+  FROM    table | subquery | view
+  [JOIN   type JOIN table ON condition]   -- INNER / LEFT / RIGHT / CROSS
+  [WHERE  row-level filter]
+  [GROUP BY grouping_columns]
+  [HAVING group-level filter]             -- post-aggregation WHERE
+  [ORDER BY col ASC|DESC]
+  [LIMIT  n OFFSET m];                   -- pagination
+
+-- ══ 4. DCL — Data Control Language ══════════════════════════════════════
+-- Controls ACCESS PERMISSIONS on the server, database, or table level.
+-- ⚠ KEY RULE: DCL auto-commits — cannot be rolled back.
+
+GRANT    -- give one or more privileges to a user
+         GRANT ALL PRIVILEGES   ON *.*           TO 'dba'@'localhost';
+         GRANT SELECT, INSERT   ON db.*          TO 'app'@'%';
+         GRANT SELECT           ON db.view_name  TO 'analyst'@'localhost';
+         GRANT EXECUTE          ON PROCEDURE db.proc TO 'user'@'%';
+
+REVOKE   -- remove privileges from a user
+         REVOKE DELETE ON db.* FROM 'user'@'host';
+
+-- ══ 5. TCL — Transaction Control Language ════════════════════════════════
+-- Manages TRANSACTION BOUNDARIES that wrap DML statements.
+-- ⚠ Only DML participates in TCL. DDL/DCL auto-commit and ignore transactions.
+
+START TRANSACTION  -- begin a transaction block (alias: BEGIN)
+COMMIT             -- permanently persist all DML changes since START TRANSACTION
+ROLLBACK           -- undo ALL DML changes since START TRANSACTION
+
+SAVEPOINT name              -- create a named checkpoint inside a transaction
+ROLLBACK TO SAVEPOINT name  -- undo back to that checkpoint only
+RELEASE SAVEPOINT name      -- delete a savepoint (cannot rollback to it after)`),
+  example: pre(`-- Every TechMart operation maps to exactly one SQL category
+
+-- ─── DDL — shaping the database structure ─────────────────────────────
+CREATE DATABASE techmart;                         -- Topics 01 → structure
+CREATE TABLE customers (id INT PRIMARY KEY ...);  -- Topic 03 → structure
+ALTER  TABLE customers ADD COLUMN loyalty INT;    -- Topic 22 → structure change
+CREATE INDEX idx_email ON customers(email);       -- Topic 16 → structure change
+TRUNCATE TABLE order_items;                       -- wipe rows (DDL, auto-commits!)
+DROP   TABLE IF EXISTS temp_staging;              -- Topic N → structure removal
+
+-- ─── DML — writing rows ───────────────────────────────────────────────
+INSERT INTO customers (name, email, city)
+  VALUES ('Alice Johnson', 'alice@mail.com', 'New York');   -- Topic 05
+
+UPDATE products SET price = 1899.99 WHERE id = 1;           -- Topic 09
+
+DELETE FROM orders WHERE status = 'cancelled'
+  AND created_at < DATE_SUB(NOW(), INTERVAL 1 YEAR);        -- Topic 10
+
+REPLACE INTO products (id, name, price)
+  VALUES (1, 'MacBook Pro M4', 1899.99);   -- deletes id=1 then re-inserts
+
+-- ─── DQL — reading data ───────────────────────────────────────────────
+SELECT c.name, COUNT(o.id) AS orders, SUM(o.total) AS revenue
+FROM   customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+WHERE  o.status IN ('delivered','shipped')
+GROUP  BY c.id, c.name
+HAVING SUM(o.total) > 500
+ORDER  BY revenue DESC
+LIMIT  10;                                                   -- Topics 06–14
+
+-- ─── DCL — controlling access ─────────────────────────────────────────
+GRANT  SELECT, INSERT, UPDATE ON techmart.* TO 'app_user'@'%';  -- Topic 27
+REVOKE UPDATE ON techmart.products FROM 'app_user'@'%';
+
+-- ─── TCL — transaction boundaries ────────────────────────────────────
+START TRANSACTION;                                           -- Topic 17
+  INSERT INTO orders (customer_id, total) VALUES (1, 2249.98);
+  INSERT INTO order_items (order_id, product_id, quantity, price)
+    VALUES (LAST_INSERT_ID(), 1, 1, 1999.99);
+  UPDATE products SET stock = stock - 1 WHERE id = 1;
+COMMIT;   -- all 3 DML statements succeed together or all ROLLBACK together
+
+-- ─── Quick reference: which commands belong where ─────────────────────
+-- DDL → CREATE, ALTER, DROP, TRUNCATE, RENAME
+-- DML → INSERT, UPDATE, DELETE, REPLACE
+-- DQL → SELECT (and all its clauses)
+-- DCL → GRANT, REVOKE
+-- TCL → START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, RELEASE SAVEPOINT`),
+  uc:"<strong>Real-world:</strong> Every database migration tool (Flyway, Liquibase, Rails ActiveRecord) categorizes scripts by type: DDL migrations run in their own step and auto-commit (can't undo on failure), DML data fixes run inside transactions (rolled back cleanly on error). AWS RDS IAM database authentication maps to DCL. During production incidents, the first question a DBA asks is 'was this DDL or DML?' — because only DML can be rolled back."
+},
+{
+  id:1, g:'Foundations', emoji:'🗄️', title:'CREATE DATABASE',
+  def:'A database is a named container that organizes all related tables, views, and objects — the top-level structure in MySQL before anything else can be created.',
+  syntax: pre(`CREATE DATABASE database_name;
+USE database_name;          -- switch into it
+SHOW DATABASES;             -- list all on server
+DROP DATABASE database_name;-- delete permanently`),
+  example: pre(`-- ① TechMart: every subsequent topic builds on this one step
+CREATE DATABASE techmart;
+USE techmart;
+
+-- Verify creation
+SHOW DATABASES;
+-- techmart will appear in the list
+
+-- Character set (best practice for international data)
+CREATE DATABASE techmart
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;`),
+  uc:'<strong>Real-world:</strong> Amazon runs separate databases per service — <em>orders_db</em>, <em>inventory_db</em>, <em>users_db</em>. Each microservice owns its own isolated database for fault tolerance and team autonomy.'
+},
+{
+  id:2, g:'Foundations', emoji:'📊', title:'Data Types',
+  def:'Data types define what kind of value a column can store — choosing correctly prevents bugs, saves storage, and makes comparisons accurate.',
+  syntax: pre(`-- ── NUMERIC ──────────────────────────────────
+TINYINT          -- -128 to 127  (1 byte)
+INT              -- ±2.1 billion (4 bytes)
+BIGINT           -- very large integers
+DECIMAL(m, d)    -- exact decimal, m digits, d after point ← use for money
+FLOAT / DOUBLE   -- approximate (avoid for money!)
+
+-- ── TEXT ──────────────────────────────────────
+VARCHAR(n)       -- variable length, max n chars (up to 65535)
+CHAR(n)          -- fixed length, padded with spaces
+TEXT             -- up to 65 KB
+LONGTEXT         -- up to 4 GB
+
+-- ── DATE & TIME ───────────────────────────────
+DATE             -- YYYY-MM-DD
+DATETIME         -- YYYY-MM-DD HH:MM:SS
+TIMESTAMP        -- auto-updates on row write
+TIME             -- HH:MM:SS
+
+-- ── OTHER ─────────────────────────────────────
+BOOLEAN          -- stored as TINYINT(1): 1=TRUE, 0=FALSE
+ENUM('a','b')    -- one value from a fixed list
+JSON             -- store and query JSON documents`),
+  example: pre(`-- TechMart: deliberate type choices for each column
+
+-- ✅ DECIMAL for money (no floating-point errors)
+price DECIMAL(10, 2)   -- e.g. 1999.99  (10 digits, 2 decimal)
+
+-- ❌ FLOAT loses precision
+price FLOAT            -- 0.1 + 0.2 = 0.30000000000000004 ← bug!
+
+-- ✅ ENUM for fixed statuses (validated at DB level)
+status ENUM('pending','shipped','delivered','cancelled')
+
+-- ✅ VARCHAR for names (saves space vs CHAR)
+name VARCHAR(100)      -- uses only the space needed
+
+-- ✅ DATETIME for order timestamps (not TIMESTAMP — avoids 2038 bug)
+created_at DATETIME DEFAULT NOW()
+
+-- ✅ BOOLEAN for flags
+is_active BOOLEAN DEFAULT TRUE  -- stored as 0/1`),
+  uc:'<strong>Real-world:</strong> Banks mandate DECIMAL for all monetary values. PayPal stores amounts as integer cents in BIGINT to completely eliminate decimal math. MySQL ENUM enforces shipment status values — no typo like <em>"shiped"</em> can ever enter the database.'
+},
+{
+  id:3, g:'Foundations', emoji:'🏗️', title:'CREATE TABLE & Constraints',
+  def:'CREATE TABLE defines a table\'s column names, types, and rules (constraints) that MySQL enforces automatically — the skeleton of your data model.',
+  syntax: pre(`CREATE TABLE table_name (
+  col_name  DATATYPE  [constraint ...],
+  ...
+  [table-level constraints]
+);
+
+-- Column-level constraints
+NOT NULL                 -- value is mandatory
+UNIQUE                   -- no duplicate values
+DEFAULT value            -- fallback when not supplied
+CHECK (expression)       -- custom validation rule
+AUTO_INCREMENT           -- auto-number (INT PKs only)
+PRIMARY KEY              -- shorthand on single column
+
+-- Table-level constraints (span multiple columns)
+PRIMARY KEY (col1, col2)
+UNIQUE (col1, col2)
+CHECK (end_date > start_date)`),
+  example: pre(`-- ② TechMart: create all 4 tables — used in EVERY topic from here on
+
+USE techmart;
+
+CREATE TABLE customers (
+  id         INT          AUTO_INCREMENT PRIMARY KEY,
+  name       VARCHAR(100) NOT NULL,
+  email      VARCHAR(150) NOT NULL UNIQUE,
+  city       VARCHAR(50),
+  created_at DATETIME     DEFAULT NOW()
+);
+
+CREATE TABLE products (
+  id       INT          AUTO_INCREMENT PRIMARY KEY,
+  name     VARCHAR(100) NOT NULL,
+  category VARCHAR(50),
+  price    DECIMAL(10,2) NOT NULL,
+  stock    INT           DEFAULT 0,
+  CONSTRAINT chk_price CHECK (price > 0),
+  CONSTRAINT chk_stock CHECK (stock >= 0)
+);
+
+CREATE TABLE orders (
+  id          INT  AUTO_INCREMENT PRIMARY KEY,
+  customer_id INT  NOT NULL,
+  total       DECIMAL(10,2) DEFAULT 0.00,
+  status      ENUM('pending','shipped','delivered','cancelled')
+                DEFAULT 'pending',
+  created_at  DATETIME DEFAULT NOW()
+);
+
+CREATE TABLE order_items (
+  id         INT  AUTO_INCREMENT PRIMARY KEY,
+  order_id   INT  NOT NULL,
+  product_id INT  NOT NULL,
+  quantity   INT  NOT NULL,
+  price      DECIMAL(10,2) NOT NULL,
+  CONSTRAINT chk_qty CHECK (quantity > 0)
+);`),
+  uc:'<strong>Real-world:</strong> Shopify\'s product table has CHECK constraints so no zero-price item can enter the DB. Airbnb uses NOT NULL on host_id and property_id — a booking with no host is a data disaster that constraints silently prevent.'
+},
+{
+  id:4, g:'Foundations', emoji:'🔑', title:'Primary Key & Foreign Key',
+  def:'A Primary Key uniquely identifies each row; a Foreign Key links a column to another table\'s PK, preventing orphaned data and enforcing referential integrity.',
+  syntax: pre(`-- Primary Key (inline shorthand)
+id INT AUTO_INCREMENT PRIMARY KEY
+
+-- Foreign Key (inline)
+customer_id INT,
+FOREIGN KEY (customer_id) REFERENCES customers(id)
+
+-- ON action options
+ON DELETE CASCADE    -- delete child rows automatically
+ON DELETE SET NULL   -- set FK column to NULL
+ON DELETE RESTRICT   -- block delete if children exist (default)
+ON UPDATE CASCADE    -- propagate PK changes
+
+-- Add FK after table creation
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_customer
+  FOREIGN KEY (customer_id) REFERENCES customers(id)
+  ON DELETE CASCADE;`),
+  example: pre(`-- ③ TechMart: wire up FK relationships
+
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_cust
+  FOREIGN KEY (customer_id) REFERENCES customers(id)
+  ON DELETE CASCADE;
+
+ALTER TABLE order_items
+  ADD CONSTRAINT fk_items_order
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+  ON DELETE CASCADE,
+  ADD CONSTRAINT fk_items_product
+  FOREIGN KEY (product_id) REFERENCES products(id)
+  ON DELETE RESTRICT;   -- can't delete a product that has been ordered
+
+-- Test integrity
+INSERT INTO orders (customer_id, total)
+VALUES (9999, 100.00);
+-- ❌ ERROR 1452: Cannot add or update a child row:
+--    a foreign key constraint fails (customer 9999 doesn't exist)
+
+-- Cascade in action: delete a customer → orders + items vanish
+DELETE FROM customers WHERE id = 5;
+-- orders for customer 5 → deleted automatically
+-- order_items of those orders → deleted automatically`),
+  uc:'<strong>Real-world:</strong> GitHub uses CASCADE DELETE so that when a repository is deleted, all issues, PRs, commits, and stars are removed atomically. Without FK constraints, these orphaned rows would silently accumulate and break future queries.'
+},
+{
+  id:5, g:'CRUD', emoji:'➕', title:'INSERT INTO',
+  def:'INSERT INTO adds new rows to a table — the only way to write data into MySQL from SQL.',
+  syntax: pre(`-- Single row
+INSERT INTO table_name (col1, col2, col3)
+VALUES (val1, val2, val3);
+
+-- Multiple rows (one round-trip — much faster than many singles)
+INSERT INTO table_name (col1, col2)
+VALUES (v1, v2),
+       (v3, v4),
+       (v5, v6);
+
+-- Insert from a SELECT result
+INSERT INTO archive_orders
+SELECT * FROM orders WHERE status = 'delivered';
+
+-- Upsert: insert or update if duplicate key
+INSERT INTO products (id, name, price)
+VALUES (1, 'MacBook Pro', 1899.99)
+ON DUPLICATE KEY UPDATE price = VALUES(price);`),
+  example: pre(`-- ④ TechMart: seed the database with working data
+
+INSERT INTO customers (name, email, city) VALUES
+  ('Alice Johnson', 'alice@mail.com',  'New York'),
+  ('Bob Smith',     'bob@mail.com',    'Chicago'),
+  ('Carol Davis',   'carol@mail.com',  'Austin'),
+  ('David Lee',     'david@mail.com',  'Seattle'),
+  ('Eve Martinez',  'eve@mail.com',    'Miami');
+
+INSERT INTO products (name, category, price, stock) VALUES
+  ('MacBook Pro',  'Laptops',      1999.99,  15),
+  ('iPhone 15',    'Phones',        999.99,  50),
+  ('iPad Air',     'Tablets',       749.99,  30),
+  ('AirPods Pro',  'Accessories',   249.99, 100),
+  ('Magic Mouse',  'Accessories',    89.99,  80),
+  ('USB-C Hub',    'Accessories',    49.99, 200);
+
+INSERT INTO orders (customer_id, total, status) VALUES
+  (1, 2249.98, 'delivered'),  -- Alice's big order
+  (2,  999.99, 'shipped'),    -- Bob's phone
+  (3,  279.97, 'pending'),    -- Carol's accessories
+  (1,  749.99, 'delivered');  -- Alice's iPad
+
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+  (1, 1, 1, 1999.99),   -- Order 1: MacBook
+  (1, 4, 1,  249.99),   -- Order 1: AirPods
+  (2, 2, 1,  999.99),   -- Order 2: iPhone
+  (3, 5, 2,  179.98),   -- Order 3: 2x Magic Mouse
+  (3, 6, 2,   99.98),   -- Order 3: 2x USB-C Hub
+  (4, 3, 1,  749.99);   -- Order 4: iPad`),
+  uc:'<strong>Real-world:</strong> When a customer checks out on eBay, a single transaction fires three INSERT statements (orders, order_items, payment) atomically. Multi-row INSERT is 5–10× faster than individual inserts — Shopify uses it for bulk catalog imports.'
+},
+{
+  id:6, g:'CRUD', emoji:'🔍', title:'SELECT',
+  def:'SELECT retrieves data from one or more tables — the most-used SQL statement in any application, running thousands of times per second on production servers.',
+  syntax: pre(`SELECT col1, col2       FROM table;   -- specific columns
+SELECT *               FROM table;   -- all columns (avoid in production)
+SELECT DISTINCT col    FROM table;   -- deduplicate values
+SELECT col AS alias    FROM table;   -- rename output column
+SELECT expr            FROM table;   -- computed value`),
+  example: pre(`-- ⑤ TechMart: reading our seeded data
+
+-- All customers
+SELECT * FROM customers;
+
+-- Specific columns only
+SELECT name, email FROM customers;
+
+-- Remove duplicate categories
+SELECT DISTINCT category FROM products;
+
+-- Aliases + computed column
+SELECT
+  name                   AS product_name,
+  price                  AS unit_price,
+  price * 0.10           AS tax,
+  price * 1.10           AS price_with_tax,
+  stock                  AS qty_available
+FROM products;
+
+-- Literal values in SELECT
+SELECT
+  name,
+  'TechMart'             AS sold_by,
+  NOW()                  AS queried_at
+FROM products;`),
+  uc:'<strong>Real-world:</strong> Every Amazon product page fires a SELECT fetching name, price, images, seller, stock, and ratings. A single Netflix home page triggers 30–50 SELECT queries to assemble your personalized recommendation rows.'
+},
+{
+  id:7, g:'CRUD', emoji:'🔎', title:'WHERE & Operators',
+  def:'WHERE filters rows before they are returned — without it, every row in the table is processed, which is slow and often wrong.',
+  syntax: pre(`SELECT ... FROM ... WHERE condition;
+
+-- Comparison   =  !=  <>  <  >  <=  >=
+-- Logical      AND   OR   NOT
+-- Range        BETWEEN val1 AND val2       (inclusive)
+-- List         IN (v1, v2, v3)
+-- Wildcard     LIKE 'prefix%'              % = any chars
+--              LIKE '_oo%'                 _ = exactly 1 char
+-- Null         IS NULL    IS NOT NULL
+-- Regex        REGEXP 'pattern'`),
+  example: pre(`-- ⑥ TechMart: filter rows with precision
+
+-- Products under $300
+SELECT name, price FROM products
+WHERE price < 300;
+
+-- Accessories currently in stock > 50 units
+SELECT name, stock FROM products
+WHERE category = 'Accessories' AND stock > 50;
+
+-- Customers in NY or Chicago
+SELECT name, city FROM customers
+WHERE city IN ('New York', 'Chicago');
+
+-- Products $100 – $800 (inclusive)
+SELECT name, price FROM products
+WHERE price BETWEEN 100 AND 800;
+
+-- Customers whose name starts with 'A'
+SELECT name, email FROM customers
+WHERE name LIKE 'A%';
+
+-- Orders not yet cancelled
+SELECT id, total, status FROM orders
+WHERE status != 'cancelled';
+
+-- Orders without a total assigned
+SELECT id, customer_id FROM orders
+WHERE total IS NULL;
+
+-- Products with 'Pro' anywhere in the name
+SELECT name FROM products
+WHERE name LIKE '%Pro%';`),
+  uc:"<strong>Real-world:</strong> Every sidebar filter on an e-commerce site — price range, brand, rating, color — becomes a WHERE clause. Netflix's recommendation engine adds WHERE language IN ('en','es') AND release_year >= 2020 before returning titles."
+},
+{
+  id:8, g:'CRUD', emoji:'📋', title:'ORDER BY & LIMIT',
+  def:'ORDER BY sorts the result set by one or more columns; LIMIT restricts how many rows are returned — together they power pagination and top-N queries.',
+  syntax: pre(`SELECT ... FROM ... WHERE ...
+ORDER BY col1 ASC, col2 DESC;  -- ASC is default
+
+-- Return first n rows
+LIMIT n;
+
+-- Skip offset rows then return n (pagination)
+LIMIT offset, n;
+-- or equivalently:
+LIMIT n OFFSET offset;`),
+  example: pre(`-- ⑦ TechMart: sorting and pagination
+
+-- Cheapest first
+SELECT name, price FROM products
+ORDER BY price ASC;
+
+-- Most expensive product only
+SELECT name, price FROM products
+ORDER BY price DESC
+LIMIT 1;
+
+-- 3 most recent orders
+SELECT id, total, status, created_at FROM orders
+ORDER BY created_at DESC
+LIMIT 3;
+
+-- Pagination: 3 products per page
+-- Page 1 (rows 1-3):
+SELECT name, price FROM products ORDER BY name LIMIT 0, 3;
+-- Page 2 (rows 4-6):
+SELECT name, price FROM products ORDER BY name LIMIT 3, 3;
+-- Page 3 (rows 7-9):
+SELECT name, price FROM products ORDER BY name LIMIT 6, 3;
+
+-- Sort by category A→Z then by price low→high within each
+SELECT name, category, price FROM products
+ORDER BY category ASC, price ASC;`),
+  uc:"<strong>Real-world:</strong> Every 'Page 1 of 248' on Google Shopping is ORDER BY relevance + LIMIT 20 OFFSET 0. Leaderboards on gaming platforms use ORDER BY score DESC LIMIT 100. Twitter's timeline is ORDER BY created_at DESC LIMIT 50."
+},
+{
+  id:9, g:'CRUD', emoji:'✏️', title:'UPDATE',
+  def:'UPDATE modifies existing row values — always pair it with WHERE; omitting WHERE updates every row in the table, which is almost never intended.',
+  syntax: pre(`UPDATE table_name
+SET col1 = val1,
+    col2 = val2
+WHERE condition;
+
+-- Arithmetic update
+UPDATE table_name SET col = col + 10 WHERE ...;
+
+-- Update with subquery
+UPDATE products
+SET price = price * 0.9
+WHERE id IN (SELECT product_id FROM order_items WHERE order_id = 1);`),
+  example: pre(`-- ⑧ TechMart: modify existing data safely
+
+-- MacBook Pro: 1 unit sold, reduce stock
+UPDATE products
+SET stock = stock - 1
+WHERE name = 'MacBook Pro';
+
+-- Apply 15% discount to all Accessories
+UPDATE products
+SET price = ROUND(price * 0.85, 2)
+WHERE category = 'Accessories';
+
+-- Mark order #2 as delivered
+UPDATE orders
+SET status = 'delivered'
+WHERE id = 2;
+
+-- Update customer email and city together
+UPDATE customers
+SET email = 'alice2025@mail.com',
+    city  = 'San Francisco'
+WHERE id = 1;
+
+-- Recalculate order total after price change
+UPDATE orders o
+SET total = (
+  SELECT SUM(quantity * price) FROM order_items
+  WHERE order_id = o.id
+)
+WHERE o.id = 1;
+
+-- ⚠️ Safe mode: always check row count before committing
+SELECT COUNT(*) FROM products WHERE category = 'Accessories';
+-- Then run UPDATE with the same WHERE clause`),
+  uc:"<strong>Real-world:</strong> Every Uber Eats status change — 'Preparing → Out for Delivery → Delivered' — is UPDATE orders SET status=? WHERE id=?. Stock systems fire UPDATE inventory SET qty = qty - sold after every completed transaction."
+},
+{
+  id:10, g:'CRUD', emoji:'🗑️', title:'DELETE & TRUNCATE',
+  def:'DELETE removes specific rows matching a condition; TRUNCATE wipes all rows instantly — both are irreversible without a prior ROLLBACK or backup.',
+  syntax: pre(`-- Remove specific rows (logged, FK-safe, rollback-able)
+DELETE FROM table_name WHERE condition;
+
+-- Remove ALL rows (slow — logged row by row)
+DELETE FROM table_name;
+
+-- Wipe all rows instantly (fast, resets AUTO_INCREMENT)
+TRUNCATE TABLE table_name;
+
+-- Remove table structure entirely
+DROP TABLE table_name;
+
+-- Key differences
+-- DELETE  → triggers fire, FK cascade works, can ROLLBACK
+-- TRUNCATE→ no triggers, faster, resets PK counter, NO rollback`),
+  example: pre(`-- ⑨ TechMart: removing data with care
+
+-- Remove a specific order item (e.g., item cancelled)
+DELETE FROM order_items
+WHERE order_id = 3 AND product_id = 6;
+
+-- Purge orders cancelled over 1 year ago
+DELETE FROM orders
+WHERE status = 'cancelled'
+  AND created_at < DATE_SUB(NOW(), INTERVAL 1 YEAR);
+
+-- GDPR: customer requests full deletion
+-- CASCADE FK means order_items → orders → customer all gone
+DELETE FROM customers WHERE id = 5;
+
+-- Remove products with zero stock (no orders placed)
+DELETE FROM products
+WHERE stock = 0
+  AND id NOT IN (SELECT DISTINCT product_id FROM order_items);
+
+-- Dev environment: wipe test data fast
+TRUNCATE TABLE order_items;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE products;
+TRUNCATE TABLE customers;
+-- AUTO_INCREMENT resets to 1 on all tables`),
+  uc:"<strong>Real-world:</strong> GDPR 'right to be forgotten' on platforms like Meta triggers CASCADE DELETE that removes a user's posts, messages, likes, and account in one statement. Log tables at Cloudflare use scheduled DELETE to purge entries older than 90 days."
+},
+{
+  id:11, g:'Querying', emoji:'🔗', title:'JOINs',
+  def:'JOINs combine rows from two or more tables based on a related column — the fundamental operation that makes relational databases relational.',
+  syntax: pre(`-- INNER JOIN: only rows with matches in BOTH tables
+FROM A INNER JOIN B ON A.id = B.a_id
+
+-- LEFT JOIN: all rows from A + matched from B (NULL if missing)
+FROM A LEFT JOIN B ON A.id = B.a_id
+
+-- RIGHT JOIN: all rows from B + matched from A
+FROM A RIGHT JOIN B ON A.id = B.a_id
+
+-- SELF JOIN: a table joined to itself
+FROM employees e1 JOIN employees e2 ON e1.manager_id = e2.id
+
+-- Multiple joins chain naturally
+FROM A
+  INNER JOIN B ON A.id = B.a_id
+  INNER JOIN C ON B.id = C.b_id`),
+  example: pre(`-- ⑩ TechMart: combine all four tables
+
+-- Customer name alongside their orders (only matched rows)
+SELECT c.name, o.id AS order_id, o.total, o.status
+FROM customers c
+INNER JOIN orders o ON c.id = o.customer_id;
+
+-- ALL customers — even those with no orders (NULL shows gaps)
+SELECT c.name, COUNT(o.id) AS order_count
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name;
+
+-- Complete invoice view: 4-table join
+SELECT
+  c.name          AS customer,
+  o.id            AS order_id,
+  o.status,
+  p.name          AS product,
+  p.category,
+  oi.quantity,
+  oi.price        AS unit_price,
+  oi.quantity * oi.price AS line_total
+FROM orders o
+INNER JOIN customers   c  ON o.customer_id  = c.id
+INNER JOIN order_items oi ON o.id           = oi.order_id
+INNER JOIN products    p  ON oi.product_id  = p.id
+ORDER BY o.id, p.name;`),
+  uc:"<strong>Real-world:</strong> Stripe's invoice PDF is assembled by JOINing payment → customer → line_item → product in one query. Spotify's 'Recently Played' joins user_plays → tracks → artists → albums — four tables, one result set, under 10ms with proper indexes."
+},
+{
+  id:12, g:'Querying', emoji:'📊', title:'Aggregate Functions',
+  def:'Aggregate functions collapse many rows into a single computed result — the engine behind every summary statistic, dashboard metric, and report.',
+  syntax: pre(`COUNT(*)         -- total rows (including NULLs)
+COUNT(col)       -- rows where col is NOT NULL
+SUM(col)         -- total numeric value
+AVG(col)         -- arithmetic mean
+MIN(col)         -- smallest value
+MAX(col)         -- largest value
+
+-- Combine aggregates freely in one SELECT
+SELECT COUNT(*), SUM(total), AVG(total), MIN(total), MAX(total)
+FROM orders;`),
+  example: pre(`-- ⑪ TechMart: business-level statistics
+
+-- How many customers do we have?
+SELECT COUNT(*) AS total_customers FROM customers;   -- 5
+
+-- Total revenue across all orders
+SELECT SUM(total) AS total_revenue FROM orders;
+
+-- Average order value
+SELECT ROUND(AVG(total), 2) AS avg_order_value FROM orders;
+
+-- Price range of our product catalog
+SELECT
+  MIN(price)            AS cheapest,
+  MAX(price)            AS most_expensive,
+  ROUND(AVG(price), 2)  AS catalog_avg_price
+FROM products;
+
+-- Revenue and units sold per product
+SELECT
+  p.name,
+  SUM(oi.quantity)                AS units_sold,
+  SUM(oi.quantity * oi.price)     AS gross_revenue
+FROM order_items oi
+JOIN products p ON oi.product_id = p.id
+GROUP BY p.id, p.name
+ORDER BY gross_revenue DESC;`),
+  uc:"<strong>Real-world:</strong> Every KPI card you see on a Shopify merchant dashboard — 'Revenue: $284,921', 'Orders today: 47', 'Avg basket: $38.20' — is COUNT/SUM/AVG. Google Analytics processes billions of aggregate queries daily across its data warehouse."
+},
+{
+  id:13, g:'Querying', emoji:'📦', title:'GROUP BY & HAVING',
+  def:'GROUP BY collapses rows with the same value into one group; HAVING filters those groups after aggregation (like WHERE, but for aggregated results).',
+  syntax: pre(`SELECT col, AGG(col2)
+FROM table
+WHERE row_condition       -- ① filter ROWS first (before grouping)
+GROUP BY col              -- ② collapse into groups
+HAVING group_condition    -- ③ filter GROUPS (after aggregating)
+ORDER BY AGG(col2) DESC;  -- ④ sort final result
+
+-- Rule: non-aggregated columns in SELECT must appear in GROUP BY`),
+  example: pre(`-- ⑫ TechMart: grouped analytics
+
+-- Spending per customer
+SELECT
+  c.name,
+  COUNT(o.id)           AS total_orders,
+  SUM(o.total)          AS lifetime_value,
+  ROUND(AVG(o.total),2) AS avg_order
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name
+ORDER BY lifetime_value DESC;
+
+-- Revenue by product category
+SELECT
+  p.category,
+  COUNT(DISTINCT oi.order_id)       AS orders_containing,
+  SUM(oi.quantity)                  AS units_sold,
+  SUM(oi.quantity * oi.price)       AS category_revenue
+FROM order_items oi
+JOIN products p ON oi.product_id = p.id
+GROUP BY p.category
+ORDER BY category_revenue DESC;
+
+-- Categories where average product price exceeds $200
+SELECT category, ROUND(AVG(price),2) AS avg_price
+FROM products
+GROUP BY category
+HAVING AVG(price) > 200;
+
+-- Repeat customers (ordered more than once)
+SELECT customer_id, COUNT(*) AS order_count
+FROM orders
+GROUP BY customer_id
+HAVING COUNT(*) > 1;`),
+  uc:"<strong>Real-world:</strong> Amazon Seller Central's revenue dashboard is GROUP BY seller_id, MONTH(created_at). Any cohort analysis (retention, LTV) in product analytics tools like Mixpanel is essentially GROUP BY user_cohort with HAVING clauses for significance thresholds."
+},
+{
+  id:14, g:'Querying', emoji:'🔄', title:'Subqueries',
+  def:'A subquery is a SELECT nested inside another query — used to compute values, filter by derived results, or express conditions that can\'t be written with a single JOIN.',
+  syntax: pre(`-- In WHERE (scalar subquery → single value)
+WHERE price > (SELECT AVG(price) FROM products)
+
+-- In WHERE with IN (returns a list)
+WHERE id IN (SELECT customer_id FROM orders)
+
+-- In WHERE with EXISTS (true/false existence check)
+WHERE EXISTS (SELECT 1 FROM orders WHERE customer_id = c.id)
+
+-- In FROM (derived table — must alias)
+FROM (SELECT ... FROM ...) AS alias
+
+-- Correlated subquery (references outer query row)
+WHERE col = (SELECT MAX(col2) FROM t WHERE t.fk = outer.id)`),
+  example: pre(`-- ⑬ TechMart: nested queries
+
+-- Products priced above the catalog average
+SELECT name, price FROM products
+WHERE price > (SELECT AVG(price) FROM products)
+ORDER BY price DESC;
+
+-- Customers who have placed at least one order
+SELECT name, email FROM customers
+WHERE id IN (SELECT DISTINCT customer_id FROM orders);
+
+-- Customers who have NEVER ordered (acquisition targets)
+SELECT name, email FROM customers
+WHERE id NOT IN (SELECT DISTINCT customer_id FROM orders);
+
+-- Each customer's most recent order date (correlated)
+SELECT c.name, o.total, o.created_at AS last_order_date
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+WHERE o.created_at = (
+  SELECT MAX(o2.created_at)
+  FROM orders o2
+  WHERE o2.customer_id = c.id
+);
+
+-- Products that have never been ordered
+SELECT name, price FROM products
+WHERE id NOT IN (SELECT DISTINCT product_id FROM order_items);
+
+-- Derived table: avg spend per city
+SELECT city, ROUND(AVG(city_total),2) AS avg_spend
+FROM (
+  SELECT c.city, SUM(o.total) AS city_total
+  FROM customers c
+  JOIN orders o ON c.id = o.customer_id
+  GROUP BY c.id, c.city
+) AS city_data
+GROUP BY city;`),
+  uc:"<strong>Real-world:</strong> LinkedIn's 'People You May Know' uses correlated subqueries to count mutual connections. Fraud detection at Stripe uses NOT EXISTS to flag transactions with no matching 3DS verification record in a parallel table."
+},
+{
+  id:15, g:'DB Objects', emoji:'👁️', title:'Views',
+  def:'A View is a saved SELECT query stored with a name — it behaves like a virtual table, hiding complexity, abstracting schema changes, and controlling column visibility.',
+  syntax: pre(`-- Create a view
+CREATE VIEW view_name AS
+SELECT ...;
+
+-- Replace/update a view definition
+CREATE OR REPLACE VIEW view_name AS
+SELECT ...;
+
+-- Query it exactly like a table
+SELECT * FROM view_name;
+SELECT col FROM view_name WHERE condition;
+
+-- Delete a view (underlying data is untouched)
+DROP VIEW view_name;
+
+-- List all views
+SHOW FULL TABLES WHERE Table_type = 'VIEW';`),
+  example: pre(`-- ⑭ TechMart: reusable virtual tables
+
+-- View 1: full order invoice (hides the JOIN complexity)
+CREATE VIEW v_order_summary AS
+SELECT
+  o.id           AS order_id,
+  c.name         AS customer_name,
+  c.email,
+  c.city,
+  o.total,
+  o.status,
+  o.created_at
+FROM orders o
+JOIN customers c ON o.customer_id = c.id;
+
+-- View 2: best-selling products (hides aggregation)
+CREATE VIEW v_top_products AS
+SELECT
+  p.name        AS product,
+  p.category,
+  SUM(oi.quantity)             AS units_sold,
+  SUM(oi.quantity * oi.price)  AS revenue
+FROM order_items oi
+JOIN products p ON oi.product_id = p.id
+GROUP BY p.id, p.name, p.category
+ORDER BY revenue DESC;
+
+-- View 3: pending orders only (security-scoped view)
+CREATE VIEW v_pending_orders AS
+SELECT order_id, customer_name, total
+FROM v_order_summary
+WHERE status = 'pending';
+
+-- Now simple queries replace complex ones:
+SELECT * FROM v_order_summary WHERE status = 'shipped';
+SELECT * FROM v_top_products LIMIT 3;
+SELECT * FROM v_pending_orders;`),
+  uc:"<strong>Real-world:</strong> Banks expose views of accounts that omit internal risk flags and SSNs — analysts query the view, never the raw table. Salesforce wraps complex multi-tenant JOINs in views so every team queries the same abstraction without knowing the underlying schema."
+},
+{
+  id:16, g:'DB Objects', emoji:'⚡', title:'Indexes',
+  def:'An Index is a B-tree data structure that lets MySQL locate rows in O(log n) instead of O(n) — like a book index vs reading every page.',
+  syntax: pre(`-- Single-column index
+CREATE INDEX idx_name ON table(column);
+
+-- Unique index (enforces no duplicates + fast lookup)
+CREATE UNIQUE INDEX idx_name ON table(column);
+
+-- Composite index (column ORDER matters for query matching)
+CREATE INDEX idx_name ON table(col1, col2);
+
+-- View indexes on a table
+SHOW INDEX FROM table_name;
+
+-- Analyze query execution (check if index is used)
+EXPLAIN SELECT ...;
+
+-- Remove an index
+DROP INDEX idx_name ON table_name;`),
+  example: pre(`-- ⑮ TechMart: add indexes to the most-queried columns
+
+-- Login query: customers searched by email
+CREATE INDEX idx_cust_email    ON customers(email);
+
+-- Product browse: filtered by category
+CREATE INDEX idx_prod_category ON products(category);
+
+-- Dashboard: orders filtered by customer AND status together
+CREATE INDEX idx_ord_cust_stat ON orders(customer_id, status);
+
+-- Order history: sorted by date
+CREATE INDEX idx_ord_created   ON orders(created_at);
+
+-- Diagnose with EXPLAIN (before vs after index)
+EXPLAIN SELECT * FROM orders WHERE customer_id = 1 AND status = 'delivered';
+-- WITHOUT index: type = ALL   → full table scan
+-- WITH index:    type = ref   → instant index lookup
+
+-- View all indexes on the orders table
+SHOW INDEX FROM orders;`),
+  uc:"<strong>Real-world:</strong> Adding a composite index on Slack's messages(channel_id, created_at) cut channel-load time from 8s to 40ms. Twitter's user timeline query relies on an index on (user_id, tweet_id DESC) — without it, every profile page would full-scan billions of rows."
+},
+{
+  id:17, g:'Reliability', emoji:'🔐', title:'Transactions',
+  def:'A Transaction wraps multiple SQL statements into a single atomic unit — all succeed together or all are rolled back, protecting data from partial updates.',
+  syntax: pre(`START TRANSACTION;     -- begin the unit
+
+  -- Any SQL here is not yet committed
+  INSERT ...;
+  UPDATE ...;
+  DELETE ...;
+
+COMMIT;                -- make all changes permanent
+
+-- OR, on error:
+ROLLBACK;              -- undo everything back to START
+
+-- Partial undo with savepoints
+SAVEPOINT sp1;
+  -- more SQL...
+ROLLBACK TO SAVEPOINT sp1;  -- undo only back to sp1
+COMMIT;                     -- commit remaining changes`),
+  example: pre(`-- ⑯ TechMart: atomic order placement
+
+-- All 3 steps succeed together, or none do
+START TRANSACTION;
+
+  -- Step 1: create the order record
+  INSERT INTO orders (customer_id, total, status)
+  VALUES (3, 149.98, 'pending');
+
+  -- Step 2: add line items
+  INSERT INTO order_items (order_id, product_id, quantity, price)
+  VALUES (LAST_INSERT_ID(), 5, 2, 149.98);
+
+  -- Step 3: deduct stock
+  UPDATE products
+  SET stock = stock - 2
+  WHERE id = 5;
+
+COMMIT;   -- ✅ all 3 rows committed atomically
+
+-- ─────────────────────────────────────────────
+-- Demonstrating ROLLBACK on error scenario
+START TRANSACTION;
+
+  UPDATE products SET stock = stock - 500 WHERE id = 1;
+  -- Oops, MacBook stock would go negative → illegal
+
+ROLLBACK;    -- stock reverts to original value
+
+-- ─────────────────────────────────────────────
+-- Savepoint example: partially commit
+START TRANSACTION;
+  INSERT INTO orders (customer_id, total) VALUES (2, 999.99);
+  SAVEPOINT after_order;
+
+  INSERT INTO order_items (order_id, product_id, quantity, price)
+  VALUES (LAST_INSERT_ID(), 99, 1, 999.99);  -- product 99 doesn't exist
+  ROLLBACK TO SAVEPOINT after_order;          -- undo only the bad insert
+
+  -- Fix and retry the item insert correctly
+  INSERT INTO order_items (order_id, product_id, quantity, price)
+  VALUES (LAST_INSERT_ID(), 2, 1, 999.99);
+COMMIT;`),
+  uc:"<strong>Real-world:</strong> Every bank wire transfer runs inside a transaction: debit source account, credit destination account. If the credit fails (network timeout), the ROLLBACK restores the debit — money never disappears. PayPal processes 25M+ such transactions daily."
+},
+{
+  id:18, g:'Reliability', emoji:'🧱', title:'ACID Properties',
+  def:'ACID is the four-property contract that makes database transactions trustworthy — the foundation that separates production databases from simple file storage.',
+  acid: true,
+  syntax: pre(`-- MySQL's default engine InnoDB provides full ACID
+SHOW ENGINES;
+-- InnoDB: Transactions=YES, XA=YES, Savepoints=YES ← use this
+
+-- Isolation levels (higher = safer but slower)
+-- READ UNCOMMITTED → can read uncommitted changes (dirty reads)
+-- READ COMMITTED   → only reads committed data
+-- REPEATABLE READ  → same query returns same data (MySQL default)
+-- SERIALIZABLE     → fully sequential, maximum isolation
+
+-- View current isolation level
+SHOW VARIABLES LIKE 'transaction_isolation';
+
+-- Change for current session
+SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;`),
+  example: pre(`-- ⑰ TechMart: each ACID property in practice
+
+-- ATOMICITY: entire order fails or succeeds as one unit
+START TRANSACTION;
+  INSERT INTO orders ...;          -- step 1
+  INSERT INTO order_items ...;     -- step 2
+  UPDATE products SET stock-=1 ...; -- step 3
+COMMIT;
+-- If server crashes after step 2 → all 3 are rolled back ✓
+
+-- CONSISTENCY: CHECK constraint blocks invalid data
+-- INSERT INTO products (price) VALUES (-50); → ERROR!
+-- CHECK (price > 0) never lets bad state enter ✓
+
+-- ISOLATION: two buyers hit last MacBook simultaneously
+-- Transaction A:  reads stock=1, deducts to 0, not yet committed
+-- Transaction B:  reads stock=1 (REPEATABLE READ snapshot)
+-- Transaction A:  COMMIT → stock is now 0
+-- Transaction B:  attempts deduct → CHECK fails or sees stock=0 ✓
+-- Result: only one buyer gets it ✓
+
+-- DURABILITY: after COMMIT the data survives a crash
+-- InnoDB writes to the redo log (WAL) before confirming COMMIT
+-- On restart: uncommitted = rolled back, committed = replayed ✓`),
+  uc:"<strong>Real-world:</strong> Visa processes 65,000 transactions/second — every one ACID-compliant. Without Durability, a datacenter power cut would lose confirmed payments. Without Isolation, two people could simultaneously buy the last seat on a flight."
+},
+{
+  id:19, g:'DB Objects', emoji:'⚙️', title:'Stored Procedures',
+  def:'A Stored Procedure is named, reusable SQL logic stored inside the database — like a function that encapsulates business rules, accepts parameters, and runs with a single CALL.',
+  syntax: pre(`DELIMITER $$
+CREATE PROCEDURE proc_name (
+  IN  param1 DATATYPE,     -- input parameter
+  OUT param2 DATATYPE,     -- output parameter
+  INOUT param3 DATATYPE    -- input and output
+)
+BEGIN
+  DECLARE var1 DATATYPE;   -- local variable
+  -- SQL + IF/ELSE + WHILE/LOOP allowed
+  SET var1 = expression;
+  SELECT ... INTO var1;
+END $$
+DELIMITER ;
+
+-- Invoke
+CALL proc_name(arg1, @out_var);
+SELECT @out_var;
+
+-- Drop
+DROP PROCEDURE proc_name;`),
+  example: pre(`-- ⑱ TechMart: stored procedure for placing orders safely
+
+DELIMITER $$
+CREATE PROCEDURE place_order(
+  IN  p_customer_id INT,
+  IN  p_product_id  INT,
+  IN  p_quantity    INT,
+  OUT p_order_id    INT,
+  OUT p_message     VARCHAR(200)
+)
+BEGIN
+  DECLARE v_price DECIMAL(10,2);
+  DECLARE v_stock INT;
+
+  -- Fetch product info
+  SELECT price, stock INTO v_price, v_stock
+  FROM products WHERE id = p_product_id;
+
+  IF v_stock IS NULL THEN
+    SET p_message = 'ERROR: Product not found';
+    SET p_order_id = 0;
+
+  ELSEIF v_stock < p_quantity THEN
+    SET p_message = CONCAT('ERROR: Only ', v_stock, ' in stock');
+    SET p_order_id = 0;
+
+  ELSE
+    START TRANSACTION;
+      INSERT INTO orders (customer_id, total, status)
+      VALUES (p_customer_id, v_price * p_quantity, 'pending');
+      SET p_order_id = LAST_INSERT_ID();
+
+      INSERT INTO order_items (order_id, product_id, quantity, price)
+      VALUES (p_order_id, p_product_id, p_quantity, v_price);
+
+      UPDATE products SET stock = stock - p_quantity
+      WHERE id = p_product_id;
+    COMMIT;
+    SET p_message = CONCAT('Order #', p_order_id, ' placed!');
+  END IF;
+END $$
+DELIMITER ;
+
+-- Bob orders 1 iPhone
+CALL place_order(2, 2, 1, @oid, @msg);
+SELECT @oid AS order_id, @msg AS result;
+
+-- Alice tries to order 500 MacBooks (only 14 left)
+CALL place_order(1, 1, 500, @oid, @msg);
+SELECT @oid, @msg;   -- ERROR: Only 14 in stock`),
+  uc:"<strong>Real-world:</strong> Banking systems wrap loan disbursement in stored procedures — one CALL handles debit, credit, fee ledger, audit log, and notification flag. Logic lives in the DB, not scattered across 12 application servers with inconsistent versions."
+},
+{
+  id:20, g:'DB Objects', emoji:'🎯', title:'Triggers',
+  def:'A Trigger is SQL that MySQL executes automatically BEFORE or AFTER an INSERT, UPDATE, or DELETE — enforcing rules and capturing history without application code.',
+  syntax: pre(`DELIMITER $$
+CREATE TRIGGER trigger_name
+  [BEFORE | AFTER] [INSERT | UPDATE | DELETE]
+  ON table_name
+  FOR EACH ROW
+BEGIN
+  -- NEW.col = new value  (INSERT, UPDATE)
+  -- OLD.col = old value  (UPDATE, DELETE)
+END $$
+DELIMITER ;
+
+-- Drop a trigger
+DROP TRIGGER trigger_name;
+
+-- List all triggers
+SHOW TRIGGERS;`),
+  example: pre(`-- ⑲ TechMart: auto-maintain data integrity
+
+-- Trigger 1: auto-recalculate order.total when an item is added
+DELIMITER $$
+CREATE TRIGGER trg_recalc_total
+  AFTER INSERT ON order_items
+  FOR EACH ROW
+BEGIN
+  UPDATE orders
+  SET total = (
+    SELECT SUM(quantity * price)
+    FROM order_items
+    WHERE order_id = NEW.order_id
+  )
+  WHERE id = NEW.order_id;
+END $$
+DELIMITER ;
+
+-- Test: insert a new item → total updates automatically
+INSERT INTO order_items (order_id, product_id, quantity, price)
+VALUES (3, 4, 1, 249.99);
+SELECT id, total FROM orders WHERE id = 3;   -- total updated!
+
+-- Trigger 2: audit log for every product price change
+CREATE TABLE price_audit (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT,
+  old_price  DECIMAL(10,2),
+  new_price  DECIMAL(10,2),
+  changed_at DATETIME DEFAULT NOW()
+);
+
+DELIMITER $$
+CREATE TRIGGER trg_price_audit
+  AFTER UPDATE ON products
+  FOR EACH ROW
+BEGIN
+  IF OLD.price != NEW.price THEN
+    INSERT INTO price_audit (product_id, old_price, new_price)
+    VALUES (NEW.id, OLD.price, NEW.price);
+  END IF;
+END $$
+DELIMITER ;
+
+-- Change MacBook price → audit row auto-inserted
+UPDATE products SET price = 1899.99 WHERE id = 1;
+SELECT * FROM price_audit;   -- shows old: 1999.99, new: 1899.99`),
+  uc:"<strong>Real-world:</strong> HIPAA-regulated healthcare databases use AFTER UPDATE triggers to write immutable audit trails whenever patient records change. Stripe uses triggers to maintain denormalized balance totals that power its real-time dashboard without a full aggregation query."
+},
+{
+  id:21, g:'Design', emoji:'📐', title:'Normalization',
+  def:'Normalization organizes tables to eliminate redundancy and anomalies — following Normal Forms (NF) ensures updates, inserts, and deletes stay consistent.',
+  normalization: true,
+  syntax: pre(`-- 1NF: atomic cells, no repeating groups, rows are unique
+-- 2NF: every non-key column depends on the WHOLE PK (no partial dependency)
+-- 3NF: no non-key column depends on another non-key column (no transitive)
+
+-- BCNF: stricter 3NF — every determinant is a candidate key
+-- 4NF: no multi-valued dependencies
+-- 5NF: no join dependencies (rarely needed in practice)
+
+-- Denormalization: intentionally violate NF for read performance
+--   (used in data warehouses, analytics, caching layers)`),
+  example: pre(`-- ⑳ TechMart: why our schema IS normalized
+
+-- ❌ BAD — everything in one table (unnormalized):
+-- | order_id | cust_name | cust_email       | prod1      | prod2    |
+-- | 1        | Alice     | alice@mail.com   | MacBook    | AirPods  |
+-- | 2        | Alice     | alice@mail.com   | iPad       | NULL     |
+-- Problems:
+--   • cust_email stored twice — update anomaly
+--   • prod1/prod2 columns — can't handle 3+ products
+--   • Deleting order 2 loses Alice's email entirely (deletion anomaly)
+--   • Can't INSERT a product without an order (insertion anomaly)
+
+-- ✅ TechMart = 3NF:
+-- customers(id, name, email, city)      ← 1 row per customer
+-- products(id, name, category, price)   ← 1 row per product
+-- orders(id, customer_id, total)        ← 1 row per order
+-- order_items(id, order_id, product_id, quantity, price)
+
+-- 1NF ✓: every cell is atomic; no repeating groups; PK on each table
+-- 2NF ✓: order_items.price depends on BOTH order_id+product_id (the PK)
+--         not on just one of them
+-- 3NF ✓: customer.city is NOT stored in orders — it lives in customers
+--         so no transitive dependency (order_id → customer_id → city)
+
+-- Benefit: Alice changes email ONCE
+UPDATE customers SET email = 'alice@new.com' WHERE id = 1;
+-- All 2 orders automatically reflect it via JOIN — zero data duplication`),
+  uc:"<strong>Real-world:</strong> Wikipedia's database is in 3NF — articles, authors, categories, and revisions are separate tables. Renaming a category touches 1 row, not millions of articles. Analytics systems (Snowflake, Redshift) deliberately use star-schema denormalization for read speed — trading write efficiency for query performance."
+},
+{
+  id:22, g:'Schema Changes', emoji:'🔧', title:'ALTER TABLE',
+  def:'ALTER TABLE modifies an existing table\'s structure — add/drop/rename columns, change data types, or add/drop constraints without recreating the table.',
+  syntax: pre(`-- Add a column
+ALTER TABLE table ADD COLUMN col DATATYPE [constraint] [AFTER other_col];
+
+-- Remove a column
+ALTER TABLE table DROP COLUMN col;
+
+-- Change column type or name
+ALTER TABLE table MODIFY COLUMN col NEW_TYPE;
+ALTER TABLE table CHANGE old_col new_col DATATYPE;
+
+-- Add / drop a constraint
+ALTER TABLE table ADD CONSTRAINT name ...;
+ALTER TABLE table DROP FOREIGN KEY fk_name;
+ALTER TABLE table DROP INDEX idx_name;
+
+-- Rename the table
+ALTER TABLE old_name RENAME TO new_name;
+
+-- Multiple changes in one statement (faster — one table rebuild)
+ALTER TABLE table
+  ADD COLUMN col1 INT,
+  DROP COLUMN col2,
+  MODIFY COLUMN col3 VARCHAR(200);`),
+  example: pre(`-- ㉑ TechMart: evolve the schema without data loss
+
+-- Add loyalty points to existing customers (no data lost)
+ALTER TABLE customers
+  ADD COLUMN loyalty_points INT DEFAULT 0 AFTER city;
+
+-- Add a phone column right after name
+ALTER TABLE customers
+  ADD COLUMN phone VARCHAR(20) AFTER name;
+
+-- Add discount % to products
+ALTER TABLE products
+  ADD COLUMN discount_pct DECIMAL(5,2) DEFAULT 0.00,
+  ADD COLUMN is_featured  BOOLEAN      DEFAULT FALSE;
+
+-- Add delivery address to orders
+ALTER TABLE orders
+  ADD COLUMN delivery_address VARCHAR(255) AFTER status;
+
+-- Change email max length (old value was 150)
+ALTER TABLE customers
+  MODIFY COLUMN email VARCHAR(200) NOT NULL;
+
+-- Rename a column
+ALTER TABLE customers
+  CHANGE phone phone_number VARCHAR(20);
+
+-- Add composite index after the fact
+ALTER TABLE orders
+  ADD INDEX idx_status_date (status, created_at);
+
+-- Verify the final structure
+DESCRIBE customers;
+DESCRIBE products;
+DESCRIBE orders;`),
+  uc:"<strong>Real-world:</strong> Every software release ships schema migrations as ALTER TABLE scripts. GitHub uses online schema change tools (pt-online-schema-change) to run ALTER TABLE on billion-row tables with zero downtime — adding columns to live production tables without locking reads."
+},
+{
+  id:23, g:'Functions', emoji:'🔤', title:'String Functions',
+  def:'String functions manipulate, format, and extract text data inside SQL queries — eliminating the need to fetch raw strings and post-process them in application code.',
+  syntax: pre(`CONCAT(s1, s2, ...)         -- join strings: 'Hello' + ' ' + 'World'
+CONCAT_WS(sep, s1, s2)      -- join with separator
+LENGTH(s)                   -- byte count
+CHAR_LENGTH(s)              -- character count (differs for UTF-8)
+UPPER(s) / LOWER(s)         -- case conversion
+TRIM(s)                     -- remove leading+trailing spaces
+LTRIM(s) / RTRIM(s)         -- one side only
+SUBSTRING(s, start, len)    -- extract: SUBSTRING('hello', 2, 3) = 'ell'
+LEFT(s, n) / RIGHT(s, n)    -- first/last n chars
+REPLACE(s, from, to)        -- replace all occurrences
+INSTR(s, substr)            -- position of substr (0 if not found)
+LOCATE(substr, s)           -- same as INSTR
+LPAD(s, len, pad)           -- left-pad to length
+RPAD(s, len, pad)           -- right-pad to length
+REVERSE(s)                  -- reverse the string
+FORMAT(n, d)                -- number as formatted string: 1234567.89 → '1,234,567.89'`),
+  example: pre(`-- ㉒ TechMart: format and manipulate strings in queries
+
+-- Build a full display label for each product
+SELECT
+  CONCAT(name, ' (', category, ')')        AS display_label,
+  CONCAT('$', FORMAT(price, 2))            AS formatted_price,
+  UPPER(category)                          AS cat_upper,
+  LENGTH(name)                             AS name_length
+FROM products;
+
+-- Mask customer emails for GDPR display
+-- alice@mail.com  →  a***@mail.com
+SELECT
+  name,
+  CONCAT(
+    LEFT(email, 1),
+    '***@',
+    SUBSTRING_INDEX(email, '@', -1)
+  )                                        AS masked_email
+FROM customers;
+
+-- Generate order reference codes: ORD-00001, ORD-00002 ...
+SELECT
+  id,
+  CONCAT('ORD-', LPAD(id, 5, '0'))        AS order_ref,
+  UPPER(status)                            AS status_display
+FROM orders;
+
+-- Search: find products containing 'pro' (case-insensitive)
+SELECT name FROM products
+WHERE LOWER(name) LIKE '%pro%';
+
+-- Trim any accidental whitespace in customer names
+UPDATE customers
+SET name = TRIM(name)
+WHERE name != TRIM(name);
+
+-- Extract domain from email for analytics
+SELECT
+  SUBSTRING_INDEX(email, '@', -1)         AS email_domain,
+  COUNT(*)                                AS count
+FROM customers
+GROUP BY email_domain;`),
+  uc:"<strong>Real-world:</strong> LinkedIn generates 'Alice J.' display names using LEFT + CONCAT on every profile card render. E-commerce platforms use REPLACE to slugify product names ('MacBook Pro' → 'macbook-pro') for URL generation directly inside SQL."
+},
+{
+  id:24, g:'Functions', emoji:'📅', title:'Date & Time Functions',
+  def:'Date/Time functions let you extract, compare, format, and arithmetic-shift temporal values — critical for reports, retention analysis, SLA tracking, and any time-based query.',
+  syntax: pre(`NOW()                        -- current datetime: '2025-01-15 14:23:00'
+CURDATE()                    -- current date: '2025-01-15'
+CURTIME()                    -- current time: '14:23:00'
+
+YEAR(d) / MONTH(d) / DAY(d) -- extract parts
+HOUR(d) / MINUTE(d)         -- time parts
+DAYNAME(d)                  -- 'Monday'
+MONTHNAME(d)                -- 'January'
+WEEK(d) / QUARTER(d)        -- week/quarter number
+
+DATE_FORMAT(d, fmt)          -- format: '%Y-%m', '%d/%m/%Y', '%W %M %Y'
+DATE_ADD(d, INTERVAL n unit) -- add n YEAR/MONTH/DAY/HOUR/MINUTE
+DATE_SUB(d, INTERVAL n unit) -- subtract
+DATEDIFF(d1, d2)             -- days between two dates
+TIMESTAMPDIFF(unit, d1, d2)  -- diff in any unit
+STR_TO_DATE(str, fmt)        -- parse string → date`),
+  example: pre(`-- ㉓ TechMart: time-based queries across all tables
+
+-- How many days ago each order was placed
+SELECT
+  id,
+  created_at,
+  DATEDIFF(NOW(), created_at)            AS days_ago,
+  DATE_FORMAT(created_at, '%d %M %Y')   AS friendly_date
+FROM orders;
+
+-- Revenue by month (monthly sales report)
+SELECT
+  DATE_FORMAT(created_at, '%Y-%m')      AS month,
+  COUNT(*)                              AS orders,
+  SUM(total)                            AS revenue
+FROM orders
+GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+ORDER BY month;
+
+-- Customer tenure (how long since they joined)
+SELECT
+  name,
+  created_at                            AS joined,
+  TIMESTAMPDIFF(DAY,  created_at, NOW()) AS days_as_customer,
+  TIMESTAMPDIFF(MONTH,created_at, NOW()) AS months_as_customer
+FROM customers;
+
+-- Orders placed in the last 30 days
+SELECT id, total, status FROM orders
+WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY);
+
+-- Late orders: pending for more than 3 days
+SELECT id, customer_id, created_at
+FROM orders
+WHERE status = 'pending'
+  AND created_at < DATE_SUB(NOW(), INTERVAL 3 DAY);
+
+-- Revenue by day of week (which day sells most?)
+SELECT
+  DAYNAME(created_at)                   AS day_of_week,
+  COUNT(*)                              AS orders,
+  SUM(total)                            AS revenue
+FROM orders
+GROUP BY DAYNAME(created_at), DAYOFWEEK(created_at)
+ORDER BY DAYOFWEEK(created_at);`),
+  uc:"<strong>Real-world:</strong> Airbnb's pricing algorithm uses DATE_ADD/DATE_SUB to detect peak-season windows. SaaS products compute trial expiry with DATE_ADD(signup_date, INTERVAL 14 DAY). Uber's driver payout reports GROUP BY WEEK(trip_date) to produce weekly settlement statements."
+},
+{
+  id:25, g:'Advanced Queries', emoji:'🪟', title:'Window Functions',
+  def:'Window Functions compute values across a set of rows related to the current row (a "window") without collapsing them into one group — enabling rankings, running totals, and row comparisons inside a single SELECT.',
+  syntax: pre(`function_name() OVER (
+  [PARTITION BY col]     -- like GROUP BY but keeps all rows
+  [ORDER BY col]         -- defines row order within the window
+  [ROWS/RANGE frame]     -- optional sliding frame
+)
+
+-- Ranking
+ROW_NUMBER()   -- unique sequential number (no ties)
+RANK()         -- tied rows share rank, next rank skips
+DENSE_RANK()   -- tied rows share rank, no skip
+
+-- Value
+FIRST_VALUE(col)  -- first value in the window
+LAST_VALUE(col)   -- last value in the window
+LAG(col, n)       -- col value from n rows BEFORE current
+LEAD(col, n)      -- col value from n rows AFTER current
+NTH_VALUE(col, n) -- nth row in the window
+
+-- Aggregate as window (non-collapsing)
+SUM(col)  OVER (PARTITION BY x ORDER BY y)   -- running total
+AVG(col)  OVER (PARTITION BY x)              -- per-group avg on every row
+COUNT(*)  OVER ()                            -- total rows in result`),
+  example: pre(`-- ㉔ TechMart: analytics without collapsing rows
+
+-- Rank products by price within each category
+SELECT
+  name,
+  category,
+  price,
+  RANK()       OVER (PARTITION BY category ORDER BY price DESC) AS price_rank,
+  DENSE_RANK() OVER (PARTITION BY category ORDER BY price DESC) AS dense_rank,
+  ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC) AS row_num
+FROM products;
+
+-- Running total of revenue (cumulative)
+SELECT
+  id           AS order_id,
+  created_at,
+  total,
+  SUM(total) OVER (ORDER BY created_at)         AS running_revenue,
+  AVG(total) OVER (ORDER BY created_at
+                   ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS moving_avg_3
+FROM orders
+ORDER BY created_at;
+
+-- Compare each order to the customer's own average
+SELECT
+  c.name,
+  o.id         AS order_id,
+  o.total,
+  ROUND(AVG(o.total) OVER (PARTITION BY o.customer_id), 2) AS cust_avg,
+  o.total - AVG(o.total) OVER (PARTITION BY o.customer_id) AS vs_their_avg
+FROM orders o
+JOIN customers c ON o.customer_id = c.id;
+
+-- Previous order amount per customer (LAG)
+SELECT
+  customer_id,
+  id           AS order_id,
+  created_at,
+  total,
+  LAG(total, 1) OVER (PARTITION BY customer_id ORDER BY created_at) AS prev_order_total,
+  total - LAG(total,1) OVER (PARTITION BY customer_id ORDER BY created_at) AS change
+FROM orders;`),
+  uc:"<strong>Real-world:</strong> Spotify's Wrapped uses DENSE_RANK() OVER (PARTITION BY user_id ORDER BY play_count DESC) to find each user's top artists. Financial platforms show running P&L with SUM(amount) OVER (ORDER BY date) — a running total impossible to express cleanly without window functions."
+},
+{
+  id:26, g:'Advanced Queries', emoji:'🌀', title:'CTEs (WITH Clause)',
+  def:'A Common Table Expression (CTE) is a named temporary result set defined with WITH — it makes complex multi-step queries readable, reusable within the query, and supports recursion for hierarchical data.',
+  syntax: pre(`-- Basic CTE
+WITH cte_name AS (
+  SELECT ...          -- the CTE query
+)
+SELECT * FROM cte_name;   -- reference it like a table
+
+-- Multiple CTEs (chain them)
+WITH
+  cte1 AS (SELECT ...),
+  cte2 AS (SELECT ... FROM cte1)   -- can reference prior CTEs
+SELECT * FROM cte2;
+
+-- Recursive CTE (for trees, hierarchies, sequences)
+WITH RECURSIVE cte_name AS (
+  SELECT ...           -- anchor: base case (non-recursive)
+  UNION ALL
+  SELECT ...           -- recursive: references cte_name itself
+  FROM cte_name
+  WHERE stop_condition
+)
+SELECT * FROM cte_name;`),
+  example: pre(`-- ㉕ TechMart: clean multi-step analysis with CTEs
+
+-- Step 1: who are the high-value customers?
+-- Step 2: what did they buy?
+-- Without CTE: a nested subquery nightmare. With CTE: crystal clear.
+
+WITH high_value_customers AS (
+  SELECT customer_id, SUM(total) AS lifetime_value
+  FROM orders
+  GROUP BY customer_id
+  HAVING SUM(total) > 1000
+),
+customer_details AS (
+  SELECT c.id, c.name, c.city, hvc.lifetime_value
+  FROM customers c
+  JOIN high_value_customers hvc ON c.id = hvc.customer_id
+)
+SELECT
+  cd.name,
+  cd.city,
+  cd.lifetime_value,
+  p.name          AS product_bought,
+  oi.quantity
+FROM customer_details cd
+JOIN orders o       ON cd.id        = o.customer_id
+JOIN order_items oi ON o.id         = oi.order_id
+JOIN products p     ON oi.product_id = p.id
+ORDER BY cd.lifetime_value DESC, p.name;
+
+-- Recursive CTE: generate a sequence 1–6 (one per product)
+WITH RECURSIVE counter AS (
+  SELECT 1 AS n            -- anchor
+  UNION ALL
+  SELECT n + 1 FROM counter WHERE n < 6  -- recursive step
+)
+SELECT c.n, p.name, p.price
+FROM counter c
+JOIN products p ON p.id = c.n;
+
+-- Recursive CTE: category breadcrumb (self-referencing hierarchy)
+-- Imagine categories: Electronics > Laptops > Gaming Laptops
+-- WITH RECURSIVE breadcrumb AS (
+--   SELECT id, name, parent_id, name AS path
+--   FROM categories WHERE parent_id IS NULL
+--   UNION ALL
+--   SELECT c.id, c.name, c.parent_id, CONCAT(b.path,' > ',c.name)
+--   FROM categories c JOIN breadcrumb b ON c.parent_id = b.id
+-- )
+-- SELECT * FROM breadcrumb;`),
+  uc:"<strong>Real-world:</strong> GitHub uses recursive CTEs to resolve nested organization hierarchies — an enterprise org can have teams within teams within teams. Accounting systems use chained CTEs to implement multi-step GL reconciliation that would otherwise require temp tables or application-layer loops."
+},
+{
+  id:27, g:'Administration', emoji:'👤', title:'User Management & Privileges',
+  def:'MySQL\'s privilege system controls who can connect, which databases they can access, and what operations they can perform — the security layer protecting every production database.',
+  syntax: pre(`-- Create a user (host restricts connection source)
+CREATE USER 'username'@'host' IDENTIFIED BY 'password';
+-- host: 'localhost' = local only | '%' = any host | '10.0.0.%' = subnet
+
+-- Grant privileges
+GRANT privilege ON scope TO 'user'@'host';
+-- privileges: SELECT, INSERT, UPDATE, DELETE, EXECUTE, ALL PRIVILEGES
+-- scope:      *.* (all DBs) | techmart.* (one DB) | techmart.orders (one table)
+
+-- Show what a user can do
+SHOW GRANTS FOR 'user'@'host';
+
+-- Revoke privileges
+REVOKE privilege ON scope FROM 'user'@'host';
+
+-- Apply changes immediately (usually auto-applied)
+FLUSH PRIVILEGES;
+
+-- Delete a user
+DROP USER 'user'@'host';
+
+-- Change password
+ALTER USER 'user'@'host' IDENTIFIED BY 'newpassword';`),
+  example: pre(`-- ㉖ TechMart: role-based access control
+
+-- ① App service account: CRUD on techmart only, no schema changes
+CREATE USER 'techmart_app'@'%' IDENTIFIED BY 'str0ng_app_pass!';
+GRANT SELECT, INSERT, UPDATE, DELETE ON techmart.* TO 'techmart_app'@'%';
+
+-- ② Read-only analyst: can query, cannot modify
+CREATE USER 'analyst'@'localhost' IDENTIFIED BY 'analyst_pass!';
+GRANT SELECT ON techmart.* TO 'analyst'@'localhost';
+
+-- ③ Reports user: only sees safe view, not raw customer table
+CREATE USER 'reports'@'localhost' IDENTIFIED BY 'report_pass!';
+GRANT SELECT ON techmart.v_order_summary   TO 'reports'@'localhost';
+GRANT SELECT ON techmart.v_top_products    TO 'reports'@'localhost';
+
+-- ④ DBA: full access (used only for migrations)
+CREATE USER 'dba_admin'@'localhost' IDENTIFIED BY 'super_secret!';
+GRANT ALL PRIVILEGES ON techmart.* TO 'dba_admin'@'localhost';
+
+-- Verify what each user can do
+SHOW GRANTS FOR 'techmart_app'@'%';
+SHOW GRANTS FOR 'analyst'@'localhost';
+
+-- Revoke UPDATE from analyst (turned out they had too much)
+REVOKE UPDATE ON techmart.* FROM 'analyst'@'localhost';
+
+-- Remove a user who left the company
+DROP USER 'old_employee'@'localhost';`),
+  uc:"<strong>Real-world:</strong> AWS RDS enforces least-privilege: your application's DB user has SELECT/INSERT/UPDATE only — never DROP or TRUNCATE. A compromised app credential can't wipe the database. Healthcare platforms create separate read-only users for BI tools so PHI can be queried but never altered."
+},
+{
+  id:28, g:'Administration', emoji:'🔬', title:'EXPLAIN & Query Optimization',
+  def:'EXPLAIN reveals MySQL\'s execution plan — showing whether indexes are used, how many rows are scanned, and where query bottlenecks live, so you can fix slow queries before they become incidents.',
+  syntax: pre(`-- Basic EXPLAIN
+EXPLAIN SELECT ...;
+
+-- Extended output (format: TREE or JSON for full detail)
+EXPLAIN FORMAT=JSON SELECT ...;
+EXPLAIN FORMAT=TREE SELECT ...;
+
+-- Analyze: actually RUN the query and show real vs estimated stats
+EXPLAIN ANALYZE SELECT ...;
+
+-- Key columns to read in EXPLAIN output:
+-- type      : access method (best → worst)
+--             system > const > eq_ref > ref > range > index > ALL
+-- key       : which index MySQL chose (NULL = no index used)
+-- rows      : estimated rows examined (lower = better)
+-- Extra     : Using index, Using filesort, Using temporary (watch for these)
+-- filtered  : % of rows that pass the WHERE after scan
+
+-- Profile slow queries
+SET profiling = 1;
+SELECT ...;
+SHOW PROFILES;
+SHOW PROFILE FOR QUERY 1;`),
+  example: pre(`-- ㉗ TechMart: diagnose and fix slow queries step by step
+
+-- ① Diagnose: full table scan (type=ALL — bad on large tables)
+EXPLAIN
+SELECT * FROM orders
+WHERE customer_id = 1 AND status = 'delivered';
+-- key: NULL, rows: 4, type: ALL  ← scanning everything
+
+-- ② Fix: add the right composite index
+CREATE INDEX idx_orders_cust_status ON orders(customer_id, status);
+
+-- ③ Re-check: now uses index (type=ref — fast!)
+EXPLAIN
+SELECT * FROM orders
+WHERE customer_id = 1 AND status = 'delivered';
+-- key: idx_orders_cust_status, rows: 2, type: ref  ✓
+
+-- ④ Diagnose the 4-table join
+EXPLAIN FORMAT=TREE
+SELECT c.name, p.name, oi.quantity
+FROM orders o
+JOIN customers   c  ON o.customer_id  = c.id
+JOIN order_items oi ON o.id           = oi.order_id
+JOIN products    p  ON oi.product_id  = p.id
+WHERE o.status = 'delivered';
+
+-- ⑤ Common EXPLAIN warnings and fixes:
+-- "Using filesort"    → add ORDER BY column to an index
+-- "Using temporary"   → GROUP BY/ORDER BY doesn't match any index
+-- "Using index"       → covering index: no table row lookup needed (best!)
+-- type = "ALL"        → add a WHERE-column index
+
+-- ⑥ Covering index: includes all SELECTed columns → zero row lookups
+CREATE INDEX idx_prod_cover ON products(category, price, name);
+EXPLAIN SELECT name, price FROM products WHERE category = 'Accessories';
+-- Extra: Using index  (read only from index, table not touched at all!)`),
+  uc:"<strong>Real-world:</strong> Instagram engineers run EXPLAIN on every new query before shipping. A missing index on a 500M-row follows table caused a 12-second query; adding a composite index on (follower_id, created_at) dropped it to 3ms. Shopify's reliability team sets a rule: any query with EXPLAIN type=ALL in production triggers an automated alert."
+},
+{
+  id:29, g:'Advanced Queries', emoji:'📄', title:'JSON in MySQL',
+  def:'MySQL 5.7+ stores and queries JSON natively — letting you keep flexible, schema-less attributes inside a typed relational column without giving up SQL\'s power.',
+  syntax: pre(`-- Store JSON in a column
+col_name JSON
+
+-- Insert JSON
+INSERT INTO t (data) VALUES ('{"key": "value", "arr": [1,2,3]}');
+
+-- Extract a value (returns JSON type)
+JSON_EXTRACT(col, '$.key')      -- or shorthand: col->>'$.key'
+
+-- Access nested / array values
+col->>'$.address.city'
+col->>'$.tags[0]'
+
+-- Modify JSON in place
+JSON_SET(col, '$.key', 'newval')    -- update or insert key
+JSON_INSERT(col, '$.key', 'val')    -- only inserts (won't overwrite)
+JSON_REMOVE(col, '$.key')           -- delete a key
+
+-- Check key existence / array membership
+JSON_CONTAINS_PATH(col, 'one', '$.key')
+JSON_CONTAINS(col, '"value"', '$.key')
+
+-- Virtual generated column + index on JSON field
+ALTER TABLE t ADD COLUMN city VARCHAR(50)
+  GENERATED ALWAYS AS (data->>'$.address.city') VIRTUAL;
+CREATE INDEX idx_json_city ON t(city);`),
+  example: pre(`-- ㉘ TechMart: flexible product attributes with JSON
+
+-- Add a JSON column for unstructured product specs
+ALTER TABLE products
+  ADD COLUMN specs JSON;
+
+-- Store different specs per category without schema changes
+UPDATE products SET specs = '{"ram":"16GB","storage":"512GB SSD","chip":"M3 Pro"}' WHERE id = 1;  -- MacBook
+UPDATE products SET specs = '{"storage":"256GB","color":"Black","5G":true}'         WHERE id = 2;  -- iPhone
+UPDATE products SET specs = '{"color":"Purple","connector":"USB-C"}'                WHERE id = 3;  -- iPad
+UPDATE products SET specs = '{"driver":"11mm","anc":true,"battery_hrs":30}'         WHERE id = 4;  -- AirPods
+
+-- Query: extract a specific field
+SELECT name, specs->>'$.chip'        AS chip   FROM products WHERE id = 1;
+SELECT name, specs->>'$.battery_hrs' AS battery FROM products WHERE id = 4;
+
+-- Filter: only products with ANC (Active Noise Cancellation)
+SELECT name, price FROM products
+WHERE JSON_CONTAINS(specs, 'true', '$.anc');
+
+-- Filter: only products with a '5G' key present
+SELECT name FROM products
+WHERE JSON_CONTAINS_PATH(specs, 'one', '$.5G');
+
+-- Virtual column: index on storage value (fast queries on JSON field)
+ALTER TABLE products
+  ADD COLUMN spec_storage VARCHAR(50)
+    GENERATED ALWAYS AS (specs->>'$.storage') VIRTUAL;
+CREATE INDEX idx_storage ON products(spec_storage);
+
+-- Now this is index-scanned instead of full-table:
+EXPLAIN SELECT name FROM products WHERE spec_storage = '256GB';`),
+  uc:"<strong>Real-world:</strong> Shopify stores per-product metafields (custom attributes) as JSON columns — a vendor can add 'material', 'care_instructions', or 'certification' without a schema migration. Stripe uses JSON for payment method metadata where card brands add non-standard fields that vary per network."
+},
+{
+  id:30, g:'Advanced Queries', emoji:'🔦', title:'Full-Text Search',
+  def:'Full-Text Search indexes every word in text columns, enabling natural-language keyword search across millions of rows in milliseconds — far faster and smarter than LIKE \'%keyword%\'.',
+  syntax: pre(`-- 1. Create a FULLTEXT index (InnoDB table required)
+ALTER TABLE table ADD FULLTEXT INDEX ft_idx (col1, col2);
+-- or at CREATE time:
+FULLTEXT (col1, col2)
+
+-- 2. Search with MATCH ... AGAINST
+MATCH(col1, col2) AGAINST('search terms')
+
+-- Modes:
+-- Natural language (default): relevance-ranked results
+AGAINST('search terms' IN NATURAL LANGUAGE MODE)
+
+-- Boolean: supports +required -excluded "exact phrase" wildcards
+AGAINST('+macbook -refurbished' IN BOOLEAN MODE)
+AGAINST('"air pods"'            IN BOOLEAN MODE)   -- exact phrase
+AGAINST('mac*'                  IN BOOLEAN MODE)   -- prefix wildcard
+
+-- Query expansion: expands search based on top results (disambiguation)
+AGAINST('apple' WITH QUERY EXPANSION)
+
+-- Score: use MATCH() in SELECT to get relevance float
+SELECT name, MATCH(col) AGAINST('term') AS score FROM t;`),
+  example: pre(`-- ㉙ TechMart: fast keyword search across products
+
+-- ① Add FULLTEXT index covering name + category
+ALTER TABLE products
+  ADD FULLTEXT INDEX ft_products (name, category);
+
+-- ② Natural language: find relevant products, ordered by relevance
+SELECT
+  name,
+  category,
+  price,
+  MATCH(name, category) AGAINST('laptop computer portable') AS relevance
+FROM products
+WHERE MATCH(name, category) AGAINST('laptop computer portable')
+ORDER BY relevance DESC;
+-- Returns: MacBook Pro (highest score), iPad Air, etc.
+
+-- ③ Boolean mode: must have 'air', must NOT have 'iPad'
+SELECT name, price FROM products
+WHERE MATCH(name, category)
+      AGAINST('+Air -iPad' IN BOOLEAN MODE);
+-- Returns: AirPods Pro (has "Air", not "iPad")
+
+-- ④ Prefix search: any product starting with 'mac'
+SELECT name, category FROM products
+WHERE MATCH(name, category)
+      AGAINST('mac*' IN BOOLEAN MODE);
+
+-- ⑤ Compare speed: LIKE vs FULLTEXT on large data
+-- ❌ LIKE with leading wildcard — ALWAYS a full table scan:
+EXPLAIN SELECT * FROM products WHERE name LIKE '%book%';
+-- type: ALL, rows: 6, Extra: Using where  (slow on millions of rows)
+
+-- ✅ FULLTEXT — uses the inverted index:
+EXPLAIN SELECT * FROM products
+WHERE MATCH(name,category) AGAINST('book' IN BOOLEAN MODE);
+-- type: fulltext, key: ft_products  (indexed word lookup!)`),
+  uc:"<strong>Real-world:</strong> Stack Overflow's question search uses MySQL FULLTEXT with boolean mode — '+python +pandas -excel' finds Python/Pandas questions excluding Excel ones. WordPress's built-in post search is MATCH(post_title, post_content) AGAINST(?) in natural language mode across millions of blog posts."
+},
+{
+  id:31, g:'Combining Results', emoji:'🔀', title:'UNION & UNION ALL',
+  def:'UNION stacks rows from two or more SELECT queries vertically into one result set — UNION removes duplicate rows (slower), UNION ALL keeps every row including duplicates (faster and usually preferred).',
+  syntax: pre(`-- Stack two result sets (columns must match in number and compatible types)
+SELECT col1, col2 FROM table1
+UNION [ALL]
+SELECT col1, col2 FROM table2;
+
+-- Rules:
+-- 1. Both SELECT must return the same number of columns
+-- 2. Column names in the result come from the FIRST SELECT
+-- 3. Data types should be compatible (MySQL coerces if needed)
+-- 4. ORDER BY applies to the FINAL result — place it at the very end
+-- 5. UNION removes duplicates (adds a sort/hash step — slower)
+--    UNION ALL skips deduplication — always prefer unless duplicates are a problem
+
+-- Multiple sets chained
+SELECT ... UNION ALL SELECT ... UNION ALL SELECT ...;
+
+-- Using aliases from first SELECT for ORDER BY
+SELECT name AS item, price FROM products
+UNION ALL
+SELECT CONCAT('Order #', id), total FROM orders
+ORDER BY price DESC;`),
+  example: pre(`-- ㉚ TechMart: combining result sets from different queries
+
+-- 1. Shipped + delivered orders in one "active" list
+SELECT id, customer_id, total, status FROM orders WHERE status = 'shipped'
+UNION ALL
+SELECT id, customer_id, total, status FROM orders WHERE status = 'delivered'
+ORDER BY id;
+-- Same as: WHERE status IN ('shipped','delivered') — but UNION shines
+-- when the two queries hit DIFFERENT tables or have very different WHERE logic
+
+-- 2. Unified contact list: customers + a fixed support entry
+SELECT name, email, 'Customer'   AS type FROM customers
+UNION ALL
+SELECT 'Support Team', 'support@techmart.com', 'Internal'
+ORDER BY type, name;
+
+-- 3. Report: top product by revenue + top product by units sold
+SELECT 'Top Revenue' AS metric, p.name, SUM(oi.quantity * oi.price) AS value
+FROM order_items oi JOIN products p ON oi.product_id = p.id
+GROUP BY p.id ORDER BY value DESC LIMIT 1
+UNION ALL
+SELECT 'Top Units', p.name, SUM(oi.quantity)
+FROM order_items oi JOIN products p ON oi.product_id = p.id
+GROUP BY p.id ORDER BY SUM(oi.quantity) DESC LIMIT 1;
+
+-- 4. UNION (without ALL) — remove duplicates
+-- Find customers who live in cities that ALSO have deliveries
+SELECT city FROM customers
+UNION
+SELECT SUBSTRING_INDEX(delivery_address, ',', -1) FROM orders
+WHERE delivery_address IS NOT NULL;
+-- Duplicates removed — same city appears only once
+
+-- 5. Schema union: audit trail across two log tables
+-- SELECT action, user_id, created_at FROM audit_log_2024
+-- UNION ALL
+-- SELECT action, user_id, created_at FROM audit_log_2025
+-- ORDER BY created_at DESC;
+-- ← Classic pattern: partition old logs to archive tables, UNION to query across years`),
+  uc:"<strong>Real-world:</strong> Financial systems UNION monthly P&L tables across fiscal years into a single report. Stripe's transaction history page combines charges, refunds, and disputes from three separate tables with UNION ALL. Instagram's activity feed UNIONs likes, comments, follows, and tags — each from its own table — then ORDER BY timestamp to give a unified timeline."
+},
+{
+  id:32, g:'Combining Results', emoji:'🔀', title:'CASE WHEN — Conditional Logic',
+  def:'CASE WHEN is SQL\'s if/else — it evaluates conditions row by row and returns a value, enabling data transformation, custom labels, conditional aggregation, and dynamic sorting directly inside a query.',
+  syntax: pre(`-- ── Searched CASE (most powerful — any condition) ──────────────
+CASE
+  WHEN condition1 THEN result1
+  WHEN condition2 THEN result2
+  ...
+  ELSE default_result          -- ELSE is optional; NULL returned if omitted
+END
+
+-- ── Simple CASE (equality checks only) ──────────────────────────
+CASE expression
+  WHEN value1 THEN result1
+  WHEN value2 THEN result2
+  ELSE default
+END
+
+-- ── Where CASE can appear ────────────────────────────────────────
+SELECT CASE ... END AS alias     -- computed column (most common)
+WHERE  CASE ... END = 'value'    -- filtering (rare — use IIF/COALESCE instead)
+ORDER  BY CASE ... END           -- dynamic sort order
+GROUP  BY CASE ... END           -- custom grouping buckets
+SUM(CASE WHEN cond THEN 1 ELSE 0 END)  -- conditional aggregation (pivot)
+UPDATE t SET col = CASE ... END WHERE condition;`),
+  example: pre(`-- ㉛ TechMart: conditional logic across every context
+
+-- 1. Classify products into price tiers
+SELECT
+  name,
+  price,
+  CASE
+    WHEN price <  100             THEN '💚 Budget'
+    WHEN price BETWEEN 100 AND 499 THEN '💛 Mid-Range'
+    WHEN price BETWEEN 500 AND 999 THEN '🧡 Premium'
+    ELSE                               '💎 Luxury'
+  END AS price_tier
+FROM products
+ORDER BY price;
+
+-- 2. Order status with emoji labels (Simple CASE)
+SELECT
+  id,
+  total,
+  CASE status
+    WHEN 'pending'   THEN '⏳ Awaiting Processing'
+    WHEN 'shipped'   THEN '🚚 On the Way'
+    WHEN 'delivered' THEN '✅ Delivered'
+    WHEN 'cancelled' THEN '❌ Cancelled'
+    ELSE '❓ Unknown'
+  END AS status_label
+FROM orders;
+
+-- 3. Dynamic sort: featured products first, then by price
+SELECT name, category, price,
+  is_featured
+FROM products
+ORDER BY
+  CASE WHEN is_featured = TRUE THEN 0 ELSE 1 END,  -- featured first
+  price ASC;                                         -- then price
+
+-- 4. Conditional aggregation (pivot table pattern)
+-- Count orders per status in ONE row instead of multiple GROUP BY rows
+SELECT
+  COUNT(*)                                         AS total_orders,
+  SUM(CASE WHEN status = 'pending'   THEN 1 END)  AS pending,
+  SUM(CASE WHEN status = 'shipped'   THEN 1 END)  AS shipped,
+  SUM(CASE WHEN status = 'delivered' THEN 1 END)  AS delivered,
+  SUM(CASE WHEN status = 'cancelled' THEN 1 END)  AS cancelled
+FROM orders;
+
+-- 5. Loyalty discount tier applied in UPDATE
+UPDATE customers
+SET loyalty_points = loyalty_points +
+  CASE
+    WHEN loyalty_points <  500 THEN 10    -- Bronze: +10 pts per order
+    WHEN loyalty_points < 2000 THEN 20    -- Silver: +20 pts per order
+    ELSE                            50    -- Gold:   +50 pts per order
+  END
+WHERE id IN (SELECT DISTINCT customer_id FROM orders
+             WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY));`),
+  uc:"<strong>Real-world:</strong> Uber's surge pricing display uses CASE WHEN demand_ratio > 2 THEN '2.0x Surge' WHEN demand_ratio > 1.5 THEN '1.5x Surge' ELSE 'Normal' END to label map zones. Google Analytics' funnel reports use conditional aggregation (SUM(CASE WHEN stage='checkout' THEN 1 ELSE 0 END)) to count conversions at each step in one pass over billions of event rows."
+},
+{
+  id:33, g:'Combining Results', emoji:'⬜', title:'NULL Handling — COALESCE · IFNULL · NULLIF',
+  def:'NULL means "unknown" or "missing" — not zero, not empty string — and follows three-valued logic (TRUE/FALSE/NULL) that makes standard comparison operators fail silently, requiring dedicated NULL-aware functions.',
+  syntax: pre(`-- ── What NULL is and is NOT ─────────────────────────────────────
+-- NULL = unknown value. It propagates through ALL operations:
+-- NULL = NULL   → NULL  (not TRUE! use IS NULL)
+-- NULL != NULL  → NULL  (not TRUE!)
+-- NULL + 5      → NULL
+-- NULL || 'x'   → NULL
+-- COUNT(col)    skips NULLs; COUNT(*) includes them
+
+-- ── Checking for NULL ────────────────────────────────────────────
+WHERE col IS NULL          -- ✅ correct
+WHERE col IS NOT NULL      -- ✅ correct
+WHERE col = NULL           -- ❌ always returns NULL (no rows matched!)
+WHERE col != NULL          -- ❌ same problem
+
+-- ── IFNULL(expr, fallback) ───────────────────────────────────────
+-- Returns fallback if expr IS NULL, otherwise returns expr (MySQL-specific)
+IFNULL(phone, 'No phone')        -- if phone is NULL → 'No phone'
+IFNULL(discount_pct, 0)          -- if NULL → 0
+
+-- ── COALESCE(a, b, c, ...) ───────────────────────────────────────
+-- Returns FIRST non-NULL value from the list (ANSI SQL standard)
+COALESCE(phone, mobile, email, 'No contact')   -- tries each in order
+COALESCE(discount_pct, category_discount, 0)   -- fallback chain
+
+-- ── NULLIF(a, b) ─────────────────────────────────────────────────
+-- Returns NULL if a = b, otherwise returns a
+-- Primary use: prevent division by zero
+NULLIF(denominator, 0)           -- if denom = 0 → NULL (instead of error)
+total / NULLIF(quantity, 0)      -- safe division
+
+-- ── NULL in aggregates ────────────────────────────────────────────
+COUNT(*)         -- counts ALL rows including NULLs
+COUNT(col)       -- counts only non-NULL values in col
+SUM(col)         -- ignores NULLs (NULL treated as zero in the sum)
+AVG(col)         -- denominator = rows with non-NULL col only`),
+  example: pre(`-- ㉜ TechMart: handling missing and unknown data
+
+-- 1. Find customers who have no phone number on file
+SELECT name, email FROM customers
+WHERE phone_number IS NULL;
+
+-- 2. Display 'Not provided' instead of NULL for missing phones
+SELECT
+  name,
+  IFNULL(phone_number, 'Not provided')     AS phone,
+  COALESCE(city, 'Unknown city')           AS city
+FROM customers;
+
+-- 3. Safe division: conversion rate (avoid divide-by-zero)
+-- If a product was viewed 0 times, NULLIF converts 0→NULL so division returns NULL
+SELECT
+  name,
+  views,
+  orders_from_product,
+  ROUND(
+    orders_from_product / NULLIF(views, 0) * 100, 2
+  )                                        AS conversion_rate_pct
+FROM product_metrics;
+
+-- 4. COALESCE: pick first available delivery address
+SELECT
+  o.id,
+  COALESCE(o.delivery_address, c.city, 'Address unknown') AS ship_to
+FROM orders o
+JOIN customers c ON o.customer_id = c.id;
+
+-- 5. NULL in aggregates — the difference matters
+SELECT
+  COUNT(*)                               AS total_products,    -- 6
+  COUNT(specs)                           AS products_with_specs, -- only those with JSON
+  COUNT(discount_pct)                    AS products_discounted,
+  AVG(discount_pct)                      AS avg_discount_where_set,
+  -- AVG ignores NULLs: only averages rows where discount_pct IS NOT NULL
+  IFNULL(AVG(discount_pct), 0)          AS avg_discount_incl_zeros
+FROM products;
+
+-- 6. NULLIF to blank out sentinel values from legacy data
+-- Some old records used -1 to mean "no stock data"
+SELECT
+  name,
+  NULLIF(stock, -1)                      AS stock_clean
+FROM products;
+-- -1 → NULL instead of showing misleading negative stock`),
+  uc:"<strong>Real-world:</strong> Salesforce's CRM handles thousands of optional fields — COALESCE picks the first populated field for display (mobile → work phone → home phone → 'No number'). Airbnb's pricing uses NULLIF to safely compute occupancy rates: bookings / NULLIF(available_nights, 0). ETL pipelines at LinkedIn use extensive NULL checks because source data from legacy systems uses NULL, 0, empty string, and 'N/A' inconsistently — the first normalization step is always NULL-handling."
+},
+{
+  id:34, g:'Reliability', emoji:'🔒', title:'Locking & Deadlocks',
+  def:'MySQL uses row-level locks to prevent concurrent transactions from corrupting shared data; a deadlock occurs when two transactions each hold a lock the other needs — InnoDB detects and resolves this within milliseconds by rolling back one transaction.',
+  syntax: pre(`-- ── Lock types ──────────────────────────────────────────────────
+-- Shared (S) lock: multiple transactions can read simultaneously
+SELECT * FROM table WHERE ... LOCK IN SHARE MODE;
+
+-- Exclusive (X) lock: only one transaction can read or write
+SELECT * FROM table WHERE ... FOR UPDATE;
+-- ↑ Locks the rows until COMMIT or ROLLBACK — use for read-then-update patterns
+
+-- ── InnoDB auto-locking ───────────────────────────────────────────
+-- INSERT, UPDATE, DELETE automatically take exclusive row locks
+-- Plain SELECT takes NO lock (uses MVCC snapshot reads by default)
+
+-- ── Gap locks (REPEATABLE READ only) ────────────────────────────
+-- Locks the GAP between indexed values to prevent phantom inserts
+-- Example: lock rows where price BETWEEN 100 AND 500 also locks the gap
+-- so another transaction can't INSERT price=300 until you COMMIT
+
+-- ── See active locks & deadlock info ────────────────────────────
+SHOW ENGINE INNODB STATUS;           -- last deadlock details + active locks
+SELECT * FROM performance_schema.data_locks;      -- MySQL 8.0
+SELECT * FROM performance_schema.data_lock_waits; -- who is waiting on whom
+
+-- ── Manually lock entire table (rarely needed in InnoDB) ─────────
+LOCK TABLES table_name WRITE;        -- exclusive table lock
+LOCK TABLES table_name READ;         -- shared table lock
+UNLOCK TABLES;                       -- release all table locks
+
+-- ── Deadlock error code ───────────────────────────────────────────
+-- ERROR 1213 (40001): Deadlock found when trying to get lock;
+--   try restarting transaction`),
+  example: pre(`-- ㉝ TechMart: concurrent orders and deadlock prevention
+
+-- ── SCENARIO: Two customers hit the last MacBook simultaneously ──
+
+-- Transaction A (Alice)           | Transaction B (Bob)
+START TRANSACTION;                  -- | START TRANSACTION;
+SELECT stock FROM products          -- |
+WHERE id = 1 FOR UPDATE;           -- | -- A holds X-lock on product 1
+-- stock = 1                       -- |
+                                    -- | SELECT stock FROM products
+                                    -- | WHERE id = 1 FOR UPDATE;
+                                    -- | -- B is BLOCKED — waiting for A's lock
+
+-- A processes the order           -- |
+UPDATE products                     -- |
+SET stock = stock - 1               -- |
+WHERE id = 1;                       -- |
+
+INSERT INTO orders                  -- |
+  (customer_id, total)              -- |
+  VALUES (1, 1999.99);              -- |
+COMMIT;  -- lock released           -- | -- B's lock is granted
+                                    -- | -- B reads stock = 0
+                                    -- | -- B sees no stock → ROLLBACK
+                                    -- | ROLLBACK;
+
+-- ── DEADLOCK example and detection ──────────────────────────────
+-- Transaction A                    | Transaction B
+START TRANSACTION;                  -- | START TRANSACTION;
+UPDATE products SET price=1799      -- | UPDATE products SET price=49
+  WHERE id=1;  -- A locks row 1    -- |   WHERE id=6;  -- B locks row 6
+
+UPDATE products SET stock=200       -- | UPDATE products SET stock=14
+  WHERE id=6;  -- A waits for B    -- |   WHERE id=1;  -- B waits for A
+-- DEADLOCK! A needs 6, B needs 1 — circular wait
+-- InnoDB detects within ~50ms, rolls back the cheaper transaction
+-- ERROR 1213: Deadlock found when trying to get lock
+
+-- ── Prevention: always lock rows in the SAME ORDER ──────────────
+-- Always update products by id ASC in all transactions:
+-- UPDATE products WHERE id=1 → THEN UPDATE products WHERE id=6
+-- Never reverse the order in another code path
+
+-- ── Check who is blocking whom right now ─────────────────────────
+SELECT
+  r.trx_id    AS waiting_trx,
+  r.trx_query AS waiting_query,
+  b.trx_id    AS blocking_trx,
+  b.trx_query AS blocking_query
+FROM information_schema.innodb_lock_waits w
+JOIN information_schema.innodb_trx r ON r.trx_id = w.requesting_trx_id
+JOIN information_schema.innodb_trx b ON b.trx_id = w.blocking_trx_id;`),
+  uc:"<strong>Real-world:</strong> Ticketmaster uses SELECT ... FOR UPDATE on seat rows so only one buyer can confirm a seat at a time — without it, two buyers could both see 'available' and both get confirmation. Amazon's inventory management teams tune lock timeout (innodb_lock_wait_timeout) and retry logic in application code because deadlocks on the orders table are expected under flash-sale load and must be handled gracefully."
+},
+{
+  id:35, g:'Reliability', emoji:'🚨', title:'Error Handling in Stored Procedures',
+  def:'DECLARE HANDLER intercepts MySQL errors and warnings inside a stored procedure — enabling try/catch logic that can log failures, return clean error messages, and recover gracefully instead of crashing silently.',
+  syntax: pre(`-- ── Declare a handler (must appear after variable declarations) ──
+DECLARE handler_type HANDLER FOR condition action;
+
+-- handler_type:
+--   CONTINUE  → catch error, continue executing next statement
+--   EXIT      → catch error, exit the current BEGIN...END block
+
+-- condition (what to catch):
+--   SQLEXCEPTION                   -- any SQL error
+--   SQLWARNING                     -- any warning (01xxx states)
+--   NOT FOUND                      -- no rows found (cursor exhausted, SELECT INTO empty)
+--   SQLSTATE 'XXXXX'               -- specific 5-char SQLSTATE code
+--   error_number                   -- e.g. 1062 for duplicate key
+
+-- Common SQLSTATE codes:
+--   '02000' → no data / NOT FOUND
+--   '23000' → integrity constraint violation (FK, UNIQUE, NOT NULL)
+--   '42000' → syntax error or access rule violation
+--   '40001' → deadlock detected
+
+-- ── SIGNAL: raise a custom error ──────────────────────────────────
+SIGNAL SQLSTATE '45000'            -- '45000' = user-defined exception
+  SET MESSAGE_TEXT = 'Your custom error message here';
+
+-- ── RESIGNAL: re-raise inside a handler ──────────────────────────
+RESIGNAL;                          -- re-throw caught error unchanged
+RESIGNAL SET MESSAGE_TEXT = 'wrapped message';
+
+-- ── GET DIAGNOSTICS: read error info inside handler ───────────────
+GET DIAGNOSTICS CONDITION 1
+  @sqlstate = RETURNED_SQLSTATE,
+  @errno    = MYSQL_ERRNO,
+  @errmsg   = MESSAGE_TEXT;`),
+  example: pre(`-- ㉞ TechMart: robust stored procedure with full error handling
+
+DELIMITER $$
+CREATE PROCEDURE safe_place_order(
+  IN  p_customer_id INT,
+  IN  p_product_id  INT,
+  IN  p_quantity    INT,
+  OUT p_result      VARCHAR(200)
+)
+BEGIN
+  -- ── Local variables ──────────────────────────────────────────────
+  DECLARE v_price      DECIMAL(10,2);
+  DECLARE v_stock      INT;
+  DECLARE v_order_id   INT;
+  DECLARE v_errno      INT;
+  DECLARE v_errmsg     VARCHAR(500);
+  DECLARE v_sqlstate   CHAR(5);
+
+  -- ── Handlers (must come after DECLARE variables) ─────────────────
+  -- Catch duplicate key (UNIQUE constraint violation)
+  DECLARE EXIT HANDLER FOR 1062
+  BEGIN
+    ROLLBACK;
+    SET p_result = 'ERROR: Duplicate entry — order already exists.';
+  END;
+
+  -- Catch FK violation (customer or product doesn't exist)
+  DECLARE EXIT HANDLER FOR 1452
+  BEGIN
+    ROLLBACK;
+    SET p_result = 'ERROR: Customer or product ID not found.';
+  END;
+
+  -- Catch deadlock
+  DECLARE EXIT HANDLER FOR 1213
+  BEGIN
+    ROLLBACK;
+    SET p_result = 'ERROR: System busy, please try again.';
+  END;
+
+  -- Catch ANY other SQL error
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    GET DIAGNOSTICS CONDITION 1
+      v_errno = MYSQL_ERRNO, v_errmsg = MESSAGE_TEXT;
+    SET p_result = CONCAT('ERROR [', v_errno, ']: ', v_errmsg);
+  END;
+
+  -- ── Business logic ───────────────────────────────────────────────
+  -- 1. Validate product exists and has stock
+  SELECT price, stock INTO v_price, v_stock
+  FROM products WHERE id = p_product_id FOR UPDATE;
+
+  IF v_stock IS NULL THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product not found.';
+  END IF;
+
+  IF v_stock < p_quantity THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Insufficient stock for the requested quantity.';
+  END IF;
+
+  -- 2. Validate customer exists
+  IF NOT EXISTS (SELECT 1 FROM customers WHERE id = p_customer_id) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Customer not found.';
+  END IF;
+
+  -- 3. Place the order atomically
+  START TRANSACTION;
+    INSERT INTO orders (customer_id, total, status)
+    VALUES (p_customer_id, v_price * p_quantity, 'pending');
+    SET v_order_id = LAST_INSERT_ID();
+
+    INSERT INTO order_items (order_id, product_id, quantity, price)
+    VALUES (v_order_id, p_product_id, p_quantity, v_price);
+
+    UPDATE products SET stock = stock - p_quantity WHERE id = p_product_id;
+  COMMIT;
+
+  SET p_result = CONCAT('SUCCESS: Order #', v_order_id, ' placed for $',
+                        ROUND(v_price * p_quantity, 2));
+END $$
+DELIMITER ;
+
+-- Test valid order
+CALL safe_place_order(1, 4, 2, @res); SELECT @res;
+-- SUCCESS: Order #7 placed for $499.98
+
+-- Test invalid customer
+CALL safe_place_order(999, 4, 1, @res); SELECT @res;
+-- ERROR: Customer not found.
+
+-- Test insufficient stock
+CALL safe_place_order(1, 1, 1000, @res); SELECT @res;
+-- ERROR: Insufficient stock for the requested quantity.`),
+  uc:"<strong>Real-world:</strong> PayPal's payment processing procedures have three-layer error handling: specific handlers for duplicate payments (1062), FK violations for invalid accounts (1452), and a catch-all SQLEXCEPTION that logs to an audit table and returns a sanitized error to the API layer — never leaking internal DB structure to the client. Healthcare systems use SIGNAL to raise custom application errors that get caught by middle-tier code and written to compliance audit logs."
+},
+{
+  id:36, g:'Administration', emoji:'💾', title:'Backup & Recovery',
+  def:'mysqldump creates a portable SQL script that recreates the database from scratch; combined with binary logs, it enables point-in-time recovery to restore the database to any exact second after the last backup.',
+  syntax: pre(`-- ══ LOGICAL BACKUP with mysqldump (run in OS shell) ══════════════
+
+-- Full database backup
+mysqldump -u root -p techmart > techmart_backup.sql
+
+-- Multiple databases
+mysqldump -u root -p --databases db1 db2 db3 > multi.sql
+
+-- All databases on server
+mysqldump -u root -p --all-databases > all_dbs.sql
+
+-- Specific tables only
+mysqldump -u root -p techmart customers products > tables.sql
+
+-- Recommended production flags:
+mysqldump -u root -p \
+  --single-transaction \       -- consistent snapshot (InnoDB, no locks)
+  --routines \                 -- include stored procedures + functions
+  --triggers \                 -- include triggers
+  --events \                   -- include scheduled events
+  --hex-blob \                 -- binary columns as hex (safe transport)
+  techmart > techmart_$(date +%Y%m%d).sql
+
+-- ══ RESTORE from dump ════════════════════════════════════════════
+mysql -u root -p techmart < techmart_backup.sql
+-- or create DB first then restore:
+mysql -u root -p -e "CREATE DATABASE techmart_restore;"
+mysql -u root -p techmart_restore < techmart_backup.sql
+
+-- ══ BINARY LOG — point-in-time recovery ══════════════════════════
+-- Enable in my.cnf: log_bin = /var/log/mysql/mysql-bin
+-- Every committed DML change is recorded in binary log files
+
+SHOW BINARY LOGS;                   -- list all binlog files + sizes
+SHOW MASTER STATUS;                 -- current binlog file + position
+FLUSH LOGS;                         -- rotate to a new binlog file
+
+-- Apply binary log events (OS shell)
+-- Replay all events after a specific position in the log:
+mysqlbinlog --start-position=4   mysql-bin.000001 | mysql -u root -p
+-- Replay up to a specific datetime:
+mysqlbinlog --stop-datetime="2025-01-15 14:30:00" mysql-bin.000001 | mysql -u root -p`),
+  example: pre(`-- ㉟ TechMart: full backup + recovery strategy in practice
+
+-- ═══════════════════════════════════════════════════════════════
+-- Step 1: Take a full backup every night at 2 AM (cron job)
+-- 0 2 * * * mysqldump -u backup_user -p'pass' --single-transaction
+--           --routines --triggers --events techmart
+--           > /backups/techmart_$(date +%F).sql
+-- ═══════════════════════════════════════════════════════════════
+
+-- Step 2: Binary logging captures every change after the backup
+SHOW VARIABLES LIKE 'log_bin';          -- ON = binary logging enabled
+SHOW VARIABLES LIKE 'binlog_format';    -- ROW = row-based logging (recommended)
+SHOW BINARY LOGS;
+-- +------------------+-----------+
+-- | Log_name         | File_size |
+-- +------------------+-----------+
+-- | mysql-bin.000042 |  15728640 |   ← last night's log
+-- | mysql-bin.000043 |   2456789 |   ← today's log
+-- +------------------+-----------+
+
+-- ═══════════════════════════════════════════════════════════════
+-- DISASTER SCENARIO: Someone ran DELETE FROM orders; at 11:47 AM
+-- Goal: restore to 11:46:59 (1 second before the mistake)
+-- ═══════════════════════════════════════════════════════════════
+
+-- Step 3: Restore last night's full backup to a recovery DB
+-- (OS shell):
+-- mysql -u root -p -e "CREATE DATABASE techmart_recovery;"
+-- mysql -u root -p techmart_recovery < /backups/techmart_2025-01-15.sql
+
+-- Step 4: Apply binary logs UP TO the moment before the DELETE
+-- (OS shell):
+-- mysqlbinlog \
+--   --stop-datetime="2025-01-15 11:46:59" \
+--   /var/log/mysql/mysql-bin.000043 \
+--   | mysql -u root -p techmart_recovery
+
+-- Step 5: Verify recovery, then swap databases
+-- (OS shell):
+-- mysqldump -u root -p techmart_recovery > /backups/recovered.sql
+-- mysql -u root -p -e "DROP DATABASE techmart;"
+-- mysql -u root -p -e "CREATE DATABASE techmart;"
+-- mysql -u root -p techmart < /backups/recovered.sql
+
+-- ── Useful backup health checks (run inside MySQL) ─────────────
+SHOW VARIABLES LIKE 'expire_logs_days';   -- how long binlogs are kept
+SET GLOBAL expire_logs_days = 7;          -- keep 7 days of binary logs
+SHOW VARIABLES LIKE 'datadir';            -- where MySQL stores data files`),
+  uc:"<strong>Real-world:</strong> GitHub's MySQL backup strategy uses --single-transaction snapshots every 4 hours plus continuous binary logging for PITR to any 5-minute window. The infamous GitLab 2017 incident lost 6 hours of production data because their backup cron had silently failed for months — MySQL binary logs were not enabled. Now every major platform tests restore procedures monthly. AWS RDS automated backups use this exact mysqldump + binlog approach under the hood."
+},
+{
+  id:37, g:'Administration', emoji:'🔄', title:'Replication',
+  def:'MySQL replication copies every committed change from the Primary (write) server to one or more Replicas (read) servers using binary logs — enabling read scaling, zero-downtime backups, geographic distribution, and automatic failover.',
+  syntax: pre(`-- ══ On the PRIMARY server ═══════════════════════════════════════
+-- 1. Enable binary logging in my.cnf:
+--    [mysqld]
+--    log_bin       = mysql-bin
+--    server_id     = 1           -- unique per server in the cluster
+--    binlog_format = ROW         -- recommended (row-level events)
+--    gtid_mode     = ON          -- Global Transaction IDs (MySQL 5.6+)
+--    enforce_gtid_consistency = ON
+
+-- 2. Create a replication user on the Primary
+CREATE USER 'repl_user'@'%' IDENTIFIED BY 'repl_password';
+GRANT REPLICATION SLAVE ON *.* TO 'repl_user'@'%';
+FLUSH PRIVILEGES;
+
+-- 3. Record current binary log position
+SHOW MASTER STATUS;
+-- +------------------+----------+
+-- | File             | Position |
+-- | mysql-bin.000001 | 154      |
+-- +------------------+----------+
+
+-- ══ On the REPLICA server ════════════════════════════════════════
+-- 1. In my.cnf: server_id = 2 (different from primary)
+
+-- 2. Point replica at the primary
+CHANGE MASTER TO
+  MASTER_HOST     = '10.0.1.100',
+  MASTER_USER     = 'repl_user',
+  MASTER_PASSWORD = 'repl_password',
+  MASTER_LOG_FILE = 'mysql-bin.000001',
+  MASTER_LOG_POS  = 154;
+-- With GTID (simpler, no position needed):
+-- CHANGE MASTER TO MASTER_AUTO_POSITION = 1;
+
+-- 3. Start replication
+START SLAVE;
+
+-- ══ Monitor replication health ═══════════════════════════════════
+SHOW SLAVE STATUS\G              -- full replica status
+-- Key fields:
+-- Slave_IO_Running: Yes         -- IO thread reading binary log from primary
+-- Slave_SQL_Running: Yes        -- SQL thread applying events
+-- Seconds_Behind_Master: 0      -- replica lag in seconds (0 = caught up)
+-- Last_Error: ''                -- empty = no errors
+
+-- Stop / reset replication
+STOP SLAVE;
+RESET SLAVE ALL;`),
+  example: pre(`-- ㊱ TechMart: primary-replica architecture for read scaling
+
+-- ═══════════════════════════════════════════════════════════════
+-- TechMart Architecture:
+--   PRIMARY (10.0.1.100):  receives all writes (INSERT/UPDATE/DELETE)
+--   REPLICA (10.0.1.101):  receives all reads (SELECT / reports / analytics)
+-- ═══════════════════════════════════════════════════════════════
+
+-- ── On PRIMARY: all write traffic goes here ──────────────────────
+-- Application config: write_db_host = '10.0.1.100'
+INSERT INTO orders (customer_id, total) VALUES (1, 999.99);
+UPDATE products SET stock = stock - 1 WHERE id = 2;
+-- These changes are written to binary log and streamed to REPLICA
+
+-- ── On REPLICA: all read traffic goes here ────────────────────────
+-- Application config: read_db_host = '10.0.1.101'
+SELECT c.name, SUM(o.total) AS revenue
+FROM customers c JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id;                            -- heavy analytical query
+-- This runs on REPLICA — PRIMARY is not burdened
+
+-- ── Monitor replica lag ───────────────────────────────────────────
+-- Run on REPLICA:
+SHOW SLAVE STATUS\G
+-- Slave_IO_Running:  Yes
+-- Slave_SQL_Running: Yes
+-- Seconds_Behind_Master: 2       ← 2-second lag (acceptable)
+-- Master_Log_File: mysql-bin.000043
+-- Read_Master_Log_Pos: 4521678
+
+-- ── What replication streams ──────────────────────────────────────
+-- PRIMARY commits: INSERT INTO orders (customer_id, total) VALUES (3, 749.99)
+-- Binary log records: the exact row change (ROW format)
+-- REPLICA IO thread: reads from binary log → writes to relay log
+-- REPLICA SQL thread: replays relay log events → applies to replica DB
+-- Result: replica has identical data within seconds
+
+-- ── Replica-safe reads: accounting for lag ───────────────────────
+-- For read-your-writes (user reads immediately after writing):
+-- Strategy 1: send read to PRIMARY for 2 seconds after a write
+-- Strategy 2: use WAIT_FOR_EXECUTED_GTID_SET() to ensure replica is caught up
+SELECT WAIT_FOR_EXECUTED_GTID_SET('uuid:1-100', 5);
+-- Waits up to 5 seconds for replica to apply up to GTID 100
+-- Returns 0 (caught up) or 1 (timeout)
+
+-- ── Failover: promote replica to primary ─────────────────────────
+-- 1. Stop writes to old primary
+-- 2. Ensure replica is fully caught up (Seconds_Behind_Master = 0)
+SHOW SLAVE STATUS\G   -- confirm 0 lag
+-- 3. On replica: stop slave, reset, promote
+STOP SLAVE;
+RESET SLAVE ALL;
+-- 4. Update application config to point writes to new primary (10.0.1.101)
+-- 5. Old primary (if recovered) becomes a new replica`),
+  uc:"<strong>Real-world:</strong> GitHub runs MySQL with one primary and multiple replicas per cluster — 80% of queries hit replicas, reducing primary load dramatically. Pinterest serves over 10 billion monthly page views by routing all product catalog reads to replicas while all pins/follows/saves go to the primary. Booking.com runs replicas in multiple geographic regions so European users read from European replicas with single-digit millisecond latency instead of crossing the Atlantic."
+},
+{
+  id:38, g:'Administration', emoji:'⚙️', title:'MySQL Configuration (my.cnf)',
+  def:'MySQL\'s behavior is controlled by the my.cnf configuration file — correctly tuning InnoDB buffer pool, connection limits, slow query logging, and binary logging can multiply throughput on the same hardware without any schema changes.',
+  syntax: pre(`-- my.cnf is located at: /etc/mysql/my.cnf or /etc/my.cnf
+-- Changes require MySQL restart unless SET GLOBAL is used for dynamic variables
+
+-- ══ MEMORY — most impactful setting ══════════════════════════════
+innodb_buffer_pool_size = 4G      -- InnoDB data+index cache (set to 70-80% RAM)
+                                  -- The single most important tuning parameter
+innodb_buffer_pool_instances = 4  -- parallel pools (1 per 1GB of buffer pool)
+
+-- ══ CONNECTIONS ══════════════════════════════════════════════════
+max_connections = 300             -- max simultaneous connections
+                                  -- each connection uses ~1MB RAM
+thread_cache_size = 50            -- reuse threads instead of creating new ones
+
+-- ══ QUERY PERFORMANCE ════════════════════════════════════════════
+slow_query_log = ON               -- log slow queries
+slow_query_log_file = /var/log/mysql/slow.log
+long_query_time = 1               -- queries > 1 second are logged
+log_queries_not_using_indexes=ON  -- also log index-less queries
+
+-- ══ REDO LOG (durability vs speed tradeoff) ═══════════════════════
+innodb_flush_log_at_trx_commit = 1  -- flush to disk on every COMMIT (safest)
+                                    -- = 0 : flush once/sec (fastest, risk data loss)
+                                    -- = 2 : write to OS cache on COMMIT (balanced)
+innodb_log_file_size = 512M       -- redo log file size (larger = fewer checkpoints)
+
+-- ══ BINARY LOG (required for replication + PITR) ═════════════════
+log_bin        = mysql-bin
+server_id      = 1
+binlog_format  = ROW
+expire_logs_days = 7              -- auto-delete binlogs older than 7 days
+sync_binlog    = 1                -- sync binlog to disk on every commit
+
+-- ══ NETWORK & PACKET SIZE ═════════════════════════════════════════
+max_allowed_packet = 64M          -- max size of SQL statement or result row
+                                  -- increase for LONGBLOB / large imports
+bind_address = 0.0.0.0            -- listen on all interfaces (or restrict IP)
+
+-- ══ CHARACTER SET defaults ════════════════════════════════════════
+character_set_server = utf8mb4
+collation_server = utf8mb4_unicode_ci
+
+-- ══ INSPECT AT RUNTIME ═══════════════════════════════════════════
+SHOW VARIABLES LIKE 'innodb_buffer_pool%';
+SHOW VARIABLES LIKE 'max_connections';
+SHOW STATUS  LIKE 'Threads_connected';       -- current live connections
+SHOW STATUS  LIKE 'Slow_queries';            -- slow query count since start
+SHOW STATUS  LIKE 'Innodb_buffer_pool_read_requests'; -- cache hit stats
+
+-- Change a dynamic variable without restart
+SET GLOBAL long_query_time = 0.5;           -- takes effect immediately`),
+  example: pre(`-- ㊲ TechMart: production-ready my.cnf + runtime diagnostics
+
+-- ─── /etc/mysql/my.cnf ─────────────────────────────────────────
+-- [mysqld]
+-- # Identity
+-- server_id = 1
+-- 
+-- # Character set
+-- character_set_server = utf8mb4
+-- collation_server     = utf8mb4_unicode_ci
+-- 
+-- # Memory (assume 8GB RAM server)
+-- innodb_buffer_pool_size      = 6G    -- 75% of RAM
+-- innodb_buffer_pool_instances = 6     -- 1 per GB
+-- innodb_log_file_size         = 512M
+-- 
+-- # Connections
+-- max_connections    = 200
+-- thread_cache_size  = 50
+-- 
+-- # Durability
+-- innodb_flush_log_at_trx_commit = 1   -- full ACID durability
+-- sync_binlog                    = 1
+-- 
+-- # Binary logging (for replication + PITR)
+-- log_bin            = /var/log/mysql/mysql-bin
+-- binlog_format      = ROW
+-- expire_logs_days   = 7
+-- 
+-- # Slow query logging
+-- slow_query_log      = ON
+-- slow_query_log_file = /var/log/mysql/slow.log
+-- long_query_time     = 1
+-- log_queries_not_using_indexes = ON
+-- ─────────────────────────────────────────────────────────────────
+
+-- Runtime health dashboard
+SELECT
+  VARIABLE_NAME, VARIABLE_VALUE
+FROM performance_schema.global_status
+WHERE VARIABLE_NAME IN (
+  'Threads_connected',       -- how many connections right now
+  'Threads_running',         -- how many are actively executing
+  'Slow_queries',            -- slow queries since last restart
+  'Questions',               -- total queries executed
+  'Innodb_buffer_pool_read_requests',  -- total cache lookups
+  'Innodb_buffer_pool_reads'           -- reads that missed cache (disk I/O)
+);
+
+-- Compute buffer pool hit rate (should be > 99%)
+SELECT
+  ROUND(
+    (1 - (
+      (SELECT VARIABLE_VALUE FROM performance_schema.global_status
+       WHERE VARIABLE_NAME='Innodb_buffer_pool_reads') /
+      (SELECT VARIABLE_VALUE FROM performance_schema.global_status
+       WHERE VARIABLE_NAME='Innodb_buffer_pool_read_requests')
+    )) * 100, 2
+  ) AS buffer_pool_hit_rate_pct;
+-- If < 95%: increase innodb_buffer_pool_size
+
+-- Find top 10 slowest queries from slow log (run pt-query-digest in shell):
+-- pt-query-digest /var/log/mysql/slow.log | head -100`),
+  uc:"<strong>Real-world:</strong> Booking.com increased MySQL throughput 3× on the same hardware by tuning innodb_buffer_pool_size from 256MB (default) to 12GB after profiling showed 40% cache miss rate. Stack Overflow serves millions of page views per day with only a handful of MySQL servers partly because their DBAs tune every server to maximize buffer pool hit rate above 99.9%. Facebook's MySQL fork (MyRocks) tunes dozens of my.cnf parameters specifically for SSD characteristics — the default config is built for spinning disks."
+},
+{
+  id:39, g:'Advanced Design', emoji:'🗂️', title:'Partitioning',
+  def:'Partitioning splits one logical table into multiple physical storage segments — MySQL queries only the relevant partition(s) (partition pruning), making range scans on massive tables dramatically faster without application changes.',
+  syntax: pre(`-- ══ RANGE partitioning — by value ranges ═════════════════════════
+-- Most common for time-series data (partition by year/month)
+CREATE TABLE orders_partitioned (
+  id         INT AUTO_INCREMENT,
+  created_at DATETIME NOT NULL,
+  total      DECIMAL(10,2),
+  status     VARCHAR(20),
+  PRIMARY KEY (id, created_at)   -- partition key MUST be in PK
+)
+PARTITION BY RANGE (YEAR(created_at)) (
+  PARTITION p2022 VALUES LESS THAN (2023),
+  PARTITION p2023 VALUES LESS THAN (2024),
+  PARTITION p2024 VALUES LESS THAN (2025),
+  PARTITION p2025 VALUES LESS THAN (2026),
+  PARTITION pmax  VALUES LESS THAN MAXVALUE   -- catch-all
+);
+
+-- ══ LIST partitioning — by specific discrete values ═══════════════
+PARTITION BY LIST (status_code) (
+  PARTITION p_active   VALUES IN (1, 2, 3),
+  PARTITION p_inactive VALUES IN (4, 5),
+  PARTITION p_deleted  VALUES IN (0)
+);
+
+-- ══ HASH partitioning — distribute evenly (no range queries) ══════
+PARTITION BY HASH (customer_id)
+PARTITIONS 8;    -- spread across 8 equal partitions
+
+-- ══ KEY partitioning — MySQL chooses the hash function ════════════
+PARTITION BY KEY (customer_id)
+PARTITIONS 4;
+
+-- ══ Manage partitions ════════════════════════════════════════════
+ALTER TABLE t ADD PARTITION (PARTITION p2026 VALUES LESS THAN (2027));
+ALTER TABLE t DROP PARTITION p2022;                    -- drop + delete data
+ALTER TABLE t TRUNCATE PARTITION p2022;                -- drop data, keep structure
+ALTER TABLE t REORGANIZE PARTITION pmax INTO (...);    -- split a catch-all
+
+-- ══ Verify partition pruning with EXPLAIN ═════════════════════════
+EXPLAIN SELECT * FROM orders_partitioned
+WHERE YEAR(created_at) = 2024;
+-- partitions: p2024  ← only ONE partition scanned!`),
+  example: pre(`-- ㊳ TechMart: partition orders by year for fast historical queries
+
+-- ── Create partitioned orders table ─────────────────────────────
+CREATE TABLE orders_part (
+  id          INT           NOT NULL AUTO_INCREMENT,
+  customer_id INT           NOT NULL,
+  total       DECIMAL(10,2),
+  status      ENUM('pending','shipped','delivered','cancelled')
+                            DEFAULT 'pending',
+  created_at  DATETIME      NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (id, created_at),      -- partition key must be part of PK
+  INDEX idx_cust (customer_id)
+)
+PARTITION BY RANGE (YEAR(created_at)) (
+  PARTITION p2023 VALUES LESS THAN (2024),
+  PARTITION p2024 VALUES LESS THAN (2025),
+  PARTITION p2025 VALUES LESS THAN (2026),
+  PARTITION pmax  VALUES LESS THAN MAXVALUE
+);
+
+-- ── Partition pruning in action ──────────────────────────────────
+-- Query for 2024 orders only touches the p2024 partition
+EXPLAIN SELECT * FROM orders_part
+WHERE created_at BETWEEN '2024-01-01' AND '2024-12-31';
+-- partitions: p2024   ← skips p2023, p2025, pmax entirely
+
+-- ── Check how rows are distributed across partitions ─────────────
+SELECT
+  PARTITION_NAME,
+  TABLE_ROWS,
+  DATA_LENGTH / 1024 / 1024 AS data_mb
+FROM information_schema.PARTITIONS
+WHERE TABLE_NAME = 'orders_part' AND TABLE_SCHEMA = 'techmart'
+ORDER BY PARTITION_NAME;
+
+-- ── Add next year's partition before it's needed ─────────────────
+ALTER TABLE orders_part
+  REORGANIZE PARTITION pmax INTO (
+    PARTITION p2026 VALUES LESS THAN (2027),
+    PARTITION pmax  VALUES LESS THAN MAXVALUE
+  );
+
+-- ── Archive old data instantly: drop the 2023 partition ──────────
+-- Without partitioning: DELETE FROM orders WHERE YEAR(created_at)=2023
+--   → scans and logs millions of rows, takes hours, huge undo log
+-- WITH partitioning:
+ALTER TABLE orders_part DROP PARTITION p2023;
+-- → drops an entire file, done in milliseconds, no undo log
+-- This is the #1 reason production systems use RANGE partitioning
+
+-- ── HASH partition: distribute customers evenly ──────────────────
+-- Useful when you have no natural range key
+CREATE TABLE customer_sessions (
+  id          BIGINT AUTO_INCREMENT,
+  customer_id INT NOT NULL,
+  session_data TEXT,
+  PRIMARY KEY (id, customer_id)
+)
+PARTITION BY HASH (customer_id)
+PARTITIONS 8;   -- 8 physical segments, writes distributed by customer_id % 8`),
+  uc:"<strong>Real-world:</strong> GitHub's pull_requests table is RANGE-partitioned by year — querying open PRs from 2024 touches only one partition out of twelve, dropping query time from 30 seconds to 200ms on a 2-billion-row table. Alibaba's Double 11 shopping event generates 100+ billion records per day, all stored in HASH-partitioned tables across hundreds of MySQL servers — partition-level parallelism is what makes it possible."
+},
+{
+  id:40, g:'Administration', emoji:'🕐', title:'Events — MySQL Event Scheduler',
+  def:'MySQL\'s Event Scheduler is a built-in cron daemon — an Event runs any SQL statement or stored procedure on a one-time or recurring schedule, eliminating the need for external cron jobs for database maintenance tasks.',
+  syntax: pre(`-- ── Enable the scheduler (must be ON for events to fire) ────────
+SET GLOBAL event_scheduler = ON;                 -- runtime toggle
+-- Or in my.cnf: event_scheduler = ON
+
+SHOW VARIABLES LIKE 'event_scheduler';           -- check current state
+
+-- ── CREATE EVENT syntax ───────────────────────────────────────────
+CREATE EVENT [IF NOT EXISTS] event_name
+ON SCHEDULE schedule_definition
+[ON COMPLETION [NOT] PRESERVE]   -- keep event after it runs (for one-time)
+[ENABLE | DISABLE]
+[COMMENT 'description']
+DO
+  sql_statement | CALL procedure_name();
+
+-- ── Schedule options ─────────────────────────────────────────────
+AT 'YYYY-MM-DD HH:MM:SS'                        -- one-time, specific datetime
+AT NOW() + INTERVAL n unit                       -- one-time, relative to now
+
+EVERY n unit                                     -- recurring, simple interval
+EVERY 1 DAY STARTS '2025-02-01 02:00:00'        -- recurring with start time
+EVERY 1 WEEK ENDS '2025-12-31 23:59:59'         -- recurring with end time
+
+-- units: SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR
+
+-- ── Manage events ─────────────────────────────────────────────────
+ALTER EVENT event_name DISABLE;                  -- pause without deleting
+ALTER EVENT event_name ENABLE;                   -- resume
+ALTER EVENT event_name ON SCHEDULE EVERY 12 HOUR; -- change schedule
+DROP EVENT [IF EXISTS] event_name;               -- delete permanently
+SHOW EVENTS [FROM db_name];                      -- list all events
+SHOW CREATE EVENT event_name;                    -- view full definition`),
+  example: pre(`-- ㊴ TechMart: automated maintenance with scheduled events
+
+-- ── 1. Nightly: update loyalty points for recent orders ──────────
+CREATE EVENT evt_nightly_loyalty
+ON SCHEDULE EVERY 1 DAY
+STARTS '2025-01-16 02:00:00'          -- runs at 2 AM every day
+ON COMPLETION PRESERVE                -- keep event after each run
+DO
+  UPDATE customers c
+  SET loyalty_points = loyalty_points + (
+    SELECT COALESCE(SUM(
+      CASE
+        WHEN c.loyalty_points <  500 THEN 10
+        WHEN c.loyalty_points < 2000 THEN 20
+        ELSE                              50
+      END
+    ), 0)
+    FROM orders o
+    WHERE o.customer_id = c.id
+      AND o.status = 'delivered'
+      AND DATE(o.created_at) = CURDATE() - INTERVAL 1 DAY
+  );
+
+-- ── 2. Weekly: archive delivered orders older than 90 days ────────
+CREATE EVENT evt_weekly_archive
+ON SCHEDULE EVERY 1 WEEK
+STARTS '2025-01-19 03:00:00'          -- Sundays at 3 AM
+DO CALL archive_old_orders();          -- calls a stored procedure
+
+-- The stored procedure it calls:
+DELIMITER $$
+CREATE PROCEDURE archive_old_orders()
+BEGIN
+  -- Move old order_items to archive table
+  INSERT INTO order_items_archive
+    SELECT * FROM order_items
+    WHERE order_id IN (
+      SELECT id FROM orders
+      WHERE status = 'delivered'
+        AND created_at < DATE_SUB(NOW(), INTERVAL 90 DAY)
+    );
+
+  -- Move old orders to archive table
+  INSERT INTO orders_archive
+    SELECT * FROM orders
+    WHERE status = 'delivered'
+      AND created_at < DATE_SUB(NOW(), INTERVAL 90 DAY);
+
+  -- Remove archived rows from live tables
+  DELETE FROM orders
+  WHERE status = 'delivered'
+    AND created_at < DATE_SUB(NOW(), INTERVAL 90 DAY);
+END $$
+DELIMITER ;
+
+-- ── 3. Hourly: flag orders stuck in pending > 24 hours ───────────
+CREATE EVENT evt_flag_stale_orders
+ON SCHEDULE EVERY 1 HOUR
+DO
+  UPDATE orders
+  SET status = 'cancelled'
+  WHERE status = 'pending'
+    AND created_at < DATE_SUB(NOW(), INTERVAL 24 HOUR);
+
+-- ── 4. One-time: run a targeted fix tomorrow at 6 AM ─────────────
+CREATE EVENT evt_one_time_price_fix
+ON SCHEDULE AT '2025-02-01 06:00:00'
+ON COMPLETION NOT PRESERVE            -- auto-delete after it runs
+DO
+  UPDATE products SET discount_pct = 0 WHERE category = 'Accessories';
+
+-- ── Monitor events ────────────────────────────────────────────────
+SHOW EVENTS FROM techmart;
+-- Lists: event name, schedule, status (ENABLED/DISABLED), last executed`),
+  uc:"<strong>Real-world:</strong> Wikipedia uses MySQL events to compute article statistics nightly (edit counts, view counts, link counts) — running millions of aggregations as a scheduled event instead of burning app-server CPU during peak traffic. E-commerce platforms use events to expire flash-sale prices (AT NOW() + INTERVAL 2 HOUR), automatically cancel unpaid reservations, and rotate session tokens. The key advantage over external cron: the event runs inside the DB engine with full transaction support and doesn't require external scheduling infrastructure."
+},
+{
+  id:41, g:'Advanced Design', emoji:'🖱️', title:'Cursors',
+  def:'A Cursor iterates over a query result set one row at a time inside a stored procedure — the escape hatch for complex row-by-row business logic that set-based SQL operations cannot express as a single query.',
+  syntax: pre(`-- Cursor lifecycle: DECLARE → OPEN → FETCH (loop) → CLOSE
+-- All DECLARE statements must come before any executable statements
+
+DELIMITER $$
+CREATE PROCEDURE proc_with_cursor()
+BEGIN
+  -- 1. Declare local variables to receive each row's values
+  DECLARE v_done    INT DEFAULT 0;
+  DECLARE v_col1    DATATYPE;
+  DECLARE v_col2    DATATYPE;
+
+  -- 2. Declare the cursor (just defines the query — does NOT run it yet)
+  DECLARE cur_name CURSOR FOR
+    SELECT col1, col2 FROM table WHERE condition ORDER BY col1;
+
+  -- 3. Declare NOT FOUND handler — sets v_done=1 when cursor runs out
+  --    MUST be declared AFTER the cursor declaration
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = 1;
+
+  -- 4. Open cursor (executes the query, positions before first row)
+  OPEN cur_name;
+
+  -- 5. Fetch loop
+  fetch_loop: LOOP
+    FETCH cur_name INTO v_col1, v_col2;   -- read next row into variables
+    IF v_done = 1 THEN
+      LEAVE fetch_loop;                   -- exit when no more rows
+    END IF;
+    -- ... process v_col1, v_col2 here ...
+  END LOOP;
+
+  -- 6. Close cursor (releases resources)
+  CLOSE cur_name;
+END $$
+DELIMITER ;
+
+-- Important limitations:
+-- • Cursors are READ-ONLY in MySQL (cannot UPDATE through cursor)
+-- • Forward-only — cannot scroll back to a previous row
+-- • Slow for large datasets — prefer set-based SQL when possible
+-- • Only usable inside stored procedures, functions, or triggers`),
+  example: pre(`-- ㊵ TechMart: tiered loyalty bonus calculation using a cursor
+-- Business rule: bonus rate changes based on CURRENT accumulated points
+-- Reason for cursor: each customer's rate depends on their running total
+-- which changes as we process each order — can't express this as a single UPDATE
+
+DELIMITER $$
+CREATE PROCEDURE apply_tiered_loyalty_bonus()
+BEGIN
+  -- Variables for each customer row
+  DECLARE v_done         INT DEFAULT 0;
+  DECLARE v_customer_id  INT;
+  DECLARE v_name         VARCHAR(100);
+  DECLARE v_current_pts  INT;
+  DECLARE v_orders_today INT;
+  DECLARE v_bonus        INT;
+
+  -- Cursor: every customer who placed a delivered order today
+  DECLARE cur_customers CURSOR FOR
+    SELECT DISTINCT c.id, c.name, c.loyalty_points,
+           COUNT(o.id) AS orders_count
+    FROM customers c
+    JOIN orders o ON c.id = o.customer_id
+    WHERE o.status = 'delivered'
+      AND DATE(o.created_at) = CURDATE()
+    GROUP BY c.id, c.name, c.loyalty_points
+    ORDER BY c.id;
+
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = 1;
+
+  OPEN cur_customers;
+
+  customer_loop: LOOP
+    FETCH cur_customers INTO v_customer_id, v_name, v_current_pts, v_orders_today;
+
+    IF v_done = 1 THEN
+      LEAVE customer_loop;
+    END IF;
+
+    -- Tiered bonus: rate depends on CURRENT points BEFORE this bonus
+    SET v_bonus = CASE
+      WHEN v_current_pts <   500 THEN v_orders_today * 10   -- Bronze
+      WHEN v_current_pts <  2000 THEN v_orders_today * 25   -- Silver
+      WHEN v_current_pts <  5000 THEN v_orders_today * 50   -- Gold
+      ELSE                            v_orders_today * 100  -- Platinum
+    END;
+
+    -- Apply the bonus for this specific customer
+    UPDATE customers
+    SET loyalty_points = loyalty_points + v_bonus
+    WHERE id = v_customer_id;
+
+    -- Optionally log the bonus for audit
+    INSERT INTO loyalty_audit (customer_id, bonus_pts, reason, applied_at)
+    VALUES (v_customer_id, v_bonus, 'Daily order bonus', NOW());
+
+  END LOOP;
+
+  CLOSE cur_customers;
+END $$
+DELIMITER ;
+
+-- Execute the cursor-based procedure
+CALL apply_tiered_loyalty_bonus();
+
+-- ── When NOT to use cursors ────────────────────────────────────────
+-- Prefer set-based UPDATE for uniform rates (much faster):
+UPDATE customers c
+JOIN (
+  SELECT customer_id, COUNT(*) AS cnt
+  FROM orders WHERE status='delivered' AND DATE(created_at) = CURDATE()
+  GROUP BY customer_id
+) AS daily ON c.id = daily.customer_id
+SET c.loyalty_points = c.loyalty_points + daily.cnt * 10;
+-- ↑ Processes ALL customers in one SQL operation — no loop, no cursor`),
+  uc:"<strong>Real-world:</strong> Insurance companies use cursors to calculate compound interest on policies where each month's base depends on the previous month's result — impossible to express as a set operation. ERP systems (SAP, Oracle) use cursor-based procedures for month-end closing where each GL account's balance rollover feeds the next account in sequence. The general rule: cursors are valid when row N's output depends on the result of processing row N-1."
+},
+{
+  id:42, g:'Administration', emoji:'🔭', title:'INFORMATION_SCHEMA',
+  def:'INFORMATION_SCHEMA is a read-only virtual database built into every MySQL server that contains live metadata about every database, table, column, index, constraint, user, and privilege on the server — query it with SELECT like any other table.',
+  syntax: pre(`-- INFORMATION_SCHEMA is a virtual DB — no physical files
+-- Always USE it to query metadata about your own schema
+
+-- ── Key virtual tables ────────────────────────────────────────────
+INFORMATION_SCHEMA.SCHEMATA             -- all databases on server
+INFORMATION_SCHEMA.TABLES               -- all tables (with row counts, sizes, engine)
+INFORMATION_SCHEMA.COLUMNS              -- every column definition (type, default, nullable)
+INFORMATION_SCHEMA.STATISTICS           -- all indexes (key name, seq, unique, column)
+INFORMATION_SCHEMA.TABLE_CONSTRAINTS    -- named constraints (PK, UNIQUE, FK, CHECK)
+INFORMATION_SCHEMA.KEY_COLUMN_USAGE     -- FK relationships (what points where)
+INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS  -- FK delete/update rules (CASCADE, RESTRICT)
+INFORMATION_SCHEMA.ROUTINES             -- stored procedures and functions
+INFORMATION_SCHEMA.TRIGGERS             -- all trigger definitions
+INFORMATION_SCHEMA.VIEWS                -- all view definitions
+INFORMATION_SCHEMA.EVENTS               -- scheduled events
+INFORMATION_SCHEMA.PARTITIONS           -- partition details and row counts
+INFORMATION_SCHEMA.USER_PRIVILEGES      -- DCL grants per user
+INFORMATION_SCHEMA.PROCESSLIST          -- currently running queries (like SHOW PROCESSLIST)
+INFORMATION_SCHEMA.INNODB_LOCKS         -- current lock details
+INFORMATION_SCHEMA.INNODB_METRICS       -- InnoDB engine metrics
+
+-- ── Shortcuts (equivalent but faster for simple cases) ───────────
+SHOW DATABASES;
+SHOW TABLES;
+SHOW COLUMNS FROM table_name;       -- same as DESCRIBE table_name
+SHOW INDEX FROM table_name;
+SHOW CREATE TABLE table_name;`),
+  example: pre(`-- ㊶ TechMart: using INFORMATION_SCHEMA as a database X-ray
+
+-- 1. List all tables in techmart with row counts and storage size
+SELECT
+  TABLE_NAME,
+  TABLE_ROWS                            AS approx_rows,
+  ROUND(DATA_LENGTH  / 1024 / 1024, 2) AS data_mb,
+  ROUND(INDEX_LENGTH / 1024 / 1024, 2) AS index_mb,
+  ENGINE,
+  TABLE_COLLATION
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = 'techmart'
+ORDER BY DATA_LENGTH DESC;
+
+-- 2. Find every column that is nullable (potential NULL-handling bugs)
+SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_DEFAULT
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = 'techmart'
+  AND IS_NULLABLE = 'YES'
+ORDER BY TABLE_NAME, ORDINAL_POSITION;
+
+-- 3. Map all FK relationships in the database
+SELECT
+  kcu.TABLE_NAME        AS child_table,
+  kcu.COLUMN_NAME       AS child_column,
+  kcu.REFERENCED_TABLE_NAME  AS parent_table,
+  kcu.REFERENCED_COLUMN_NAME AS parent_column,
+  rc.DELETE_RULE,
+  rc.UPDATE_RULE
+FROM information_schema.KEY_COLUMN_USAGE kcu
+JOIN information_schema.REFERENTIAL_CONSTRAINTS rc
+  ON kcu.CONSTRAINT_NAME = rc.CONSTRAINT_NAME
+  AND kcu.TABLE_SCHEMA   = rc.CONSTRAINT_SCHEMA
+WHERE kcu.TABLE_SCHEMA = 'techmart'
+  AND kcu.REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY child_table;
+
+-- 4. Find all indexes across all tables
+SELECT
+  TABLE_NAME, INDEX_NAME, COLUMN_NAME,
+  NON_UNIQUE,
+  CARDINALITY              -- estimate of unique values (higher = more selective)
+FROM information_schema.STATISTICS
+WHERE TABLE_SCHEMA = 'techmart'
+ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX;
+
+-- 5. Find tables with NO indexes (beyond PK) — potential performance risk
+SELECT t.TABLE_NAME
+FROM information_schema.TABLES t
+WHERE t.TABLE_SCHEMA = 'techmart'
+  AND t.TABLE_TYPE = 'BASE TABLE'
+  AND t.TABLE_NAME NOT IN (
+    SELECT DISTINCT TABLE_NAME FROM information_schema.STATISTICS
+    WHERE TABLE_SCHEMA = 'techmart'
+      AND INDEX_NAME != 'PRIMARY'
+  );
+
+-- 6. Kill long-running queries (find then kill)
+SELECT ID, USER, HOST, DB, TIME, STATE, LEFT(INFO, 80) AS query
+FROM information_schema.PROCESSLIST
+WHERE TIME > 30                      -- running longer than 30 seconds
+  AND COMMAND != 'Sleep';
+-- Then: KILL QUERY 1234;            -- kill just the query, keep connection
+--       KILL CONNECTION 1234;       -- kill the entire connection
+
+-- 7. Auto-generate ALTER TABLE for all INT columns missing an index
+SELECT CONCAT(
+  'CREATE INDEX idx_', COLUMN_NAME, ' ON ', TABLE_NAME,
+  '(', COLUMN_NAME, ');'
+) AS suggested_index
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = 'techmart'
+  AND DATA_TYPE = 'int'
+  AND COLUMN_NAME != 'id'
+  AND COLUMN_NAME NOT IN (
+    SELECT COLUMN_NAME FROM information_schema.STATISTICS
+    WHERE TABLE_SCHEMA = 'techmart'
+  );`),
+  uc:"<strong>Real-world:</strong> GitHub's database tooling scripts query INFORMATION_SCHEMA.TABLES to auto-detect when a table exceeds 50GB and triggers a migration to a partitioned schema. Database monitoring tools like Percona Monitoring (PMM) and DataDog's MySQL integration query INFORMATION_SCHEMA.PROCESSLIST and INNODB_METRICS every 10 seconds to build real-time dashboards. DevOps teams use INFORMATION_SCHEMA.KEY_COLUMN_USAGE to auto-generate entity-relationship documentation for any schema — no manual diagramming needed."
+},
+{
+  id:43, g:'Advanced Design', emoji:'🌐', title:'Character Sets & Collation',
+  def:'A character set defines which characters MySQL can store; a collation defines how characters are compared and sorted — using the wrong charset causes emoji to corrupt silently, and the wrong collation makes case-sensitive searches fail in unexpected ways.',
+  syntax: pre(`-- ══ CHARACTER SETS ══════════════════════════════════════════════
+-- MySQL's confusingly named 'utf8' is NOT true UTF-8:
+--   utf8   → max 3 bytes/char → cannot store emoji or rare Unicode
+--   utf8mb4 → max 4 bytes/char → TRUE UTF-8 → stores ALL Unicode ✓
+-- Always use utf8mb4 for new databases.
+
+-- ══ COLLATIONS ═══════════════════════════════════════════════════
+-- Suffix meanings:
+--   _ci   → case-insensitive     ('a' = 'A', 'café' = 'CAFÉ')
+--   _cs   → case-sensitive       ('a' ≠ 'A')
+--   _bin  → binary byte-by-byte  ('a' ≠ 'A', 'é' ≠ 'e')
+--   _ai   → accent-insensitive   ('cafe' = 'café')
+--   _as   → accent-sensitive     ('cafe' ≠ 'café')
+
+-- Common collations:
+--   utf8mb4_unicode_ci   → case+accent insensitive (general use)
+--   utf8mb4_bin          → exact byte matching (passwords, codes)
+--   utf8mb4_0900_ai_ci   → MySQL 8.0 default, fastest (case+accent insensitive)
+
+-- ══ Scope hierarchy (overrides cascade down) ══════════════════════
+-- Server (my.cnf) → Database → Table → Column → Literal
+
+-- ══ Syntax ═══════════════════════════════════════════════════════
+-- Set at database level
+CREATE DATABASE techmart CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER DATABASE techmart CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Set at table level
+CREATE TABLE t (...) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE t CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Set at column level (overrides table)
+name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
+
+-- Apply collation in a single query (without changing the column)
+SELECT name FROM customers ORDER BY name COLLATE utf8mb4_unicode_ci;
+
+-- Check current settings
+SHOW VARIABLES LIKE 'character_set%';
+SHOW VARIABLES LIKE 'collation%';
+SHOW CHARACTER SET;           -- all available charsets
+SHOW COLLATION WHERE Charset = 'utf8mb4';   -- collations for utf8mb4
+
+-- Convert a value's charset/collation at query time
+SELECT CONVERT(name USING utf8mb4) FROM customers;`),
+  example: pre(`-- ㊷ TechMart: internationalization and emoji support
+
+-- 1. Diagnose current character set settings
+SHOW VARIABLES LIKE 'character_set_database';
+-- utf8mb4 ✓ (if it shows 'utf8' → old 3-byte charset, upgrade!)
+SHOW VARIABLES LIKE 'collation_database';
+-- utf8mb4_unicode_ci ✓
+
+-- 2. What happens WITHOUT utf8mb4 (the bug):
+-- If database is latin1 or utf8 (3-byte):
+INSERT INTO customers (name) VALUES ('João 😊');
+-- 'utf8': 😊 = 4 bytes → stored as '????' or ERROR 1366
+-- utf8mb4: 😊 stored and retrieved perfectly ✓
+
+-- 3. Fix existing tables to utf8mb4
+ALTER TABLE customers  CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE products   CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE orders     CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE order_items CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 4. Case-insensitive search (default _ci behavior)
+-- utf8mb4_unicode_ci: 'macbook' matches 'MacBook', 'MACBOOK', 'MaCbOoK'
+SELECT name FROM products WHERE name LIKE '%macbook%';
+-- Returns: 'MacBook Pro'  ← works even with lowercase search term ✓
+
+-- 5. Case-SENSITIVE search when you need exact match
+-- Use _bin collation for one query:
+SELECT name FROM customers
+WHERE name = 'alice' COLLATE utf8mb4_bin;
+-- Returns nothing — 'alice' ≠ 'Alice' in binary collation
+
+-- Or define the column as case-sensitive permanently:
+ALTER TABLE customers
+  MODIFY COLUMN email VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+-- Now email lookups are exact-case: 'Alice@Mail.com' ≠ 'alice@mail.com'
+-- Good for email/username columns where case matters for security
+
+-- 6. Accent-sensitive vs insensitive
+-- utf8mb4_unicode_ci is accent-INsensitive:
+SELECT * FROM customers WHERE name = 'João';    -- also matches 'Joao' ← bug!
+-- Use utf8mb4_0900_as_cs for accent-SENSITIVE, case-SENSITIVE:
+SELECT * FROM customers
+WHERE name = 'João' COLLATE utf8mb4_0900_as_cs;  -- only exact 'João'
+
+-- 7. Sort order depends on collation
+SELECT name FROM customers ORDER BY name;
+-- _unicode_ci: João sorts near 'J' (ignores accent for sorting)
+-- _bin:        João sorts AFTER all ASCII — by byte value of 'J' + ã
+
+-- 8. Check column-level charset in INFORMATION_SCHEMA
+SELECT COLUMN_NAME, CHARACTER_SET_NAME, COLLATION_NAME
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = 'techmart'
+  AND CHARACTER_SET_NAME IS NOT NULL;`),
+  uc:"<strong>Real-world:</strong> Twitter's 2019 emoji storage bug silently corrupted millions of tweets that contained 4-byte emoji characters because the production MySQL was set to utf8 instead of utf8mb4. The fix required an emergency ALTER TABLE ... CONVERT TO CHARACTER SET utf8mb4 on multi-billion-row tables — a painful 8-hour maintenance window. All new MySQL deployments at Twitter, Facebook, and Slack now mandate utf8mb4 + utf8mb4_unicode_ci as the non-negotiable default in their infrastructure scaffolding."
+}
+];
+
+// ─── GROUPS for sidebar ───────────────────────────────────────────────────────
+const groups = ['Overview','Foundations','CRUD','Querying','DB Objects','Reliability','Design',
+                'Schema Changes','Functions','Advanced Queries','Combining Results',
+                'Administration','Advanced Design'];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let cur = 0;
+const seen = new Set();
+
+// ─── RENDER SIDEBAR ──────────────────────────────────────────────────────────
+function renderSidebar() {
+  const el = document.getElementById('sb-list');
+  let html = '';
+  let lastGroup = '';
+  topics.forEach((t, i) => {
+    if (t.g !== lastGroup) {
+      html += `<div class="sb-group">${t.g}</div>`;
+      lastGroup = t.g;
+    }
+    html += `<div class="sb-item ${i===cur?'active':''}" onclick="goto(${i})">
+      <span class="sb-num">${String(t.id).padStart(2,'0')}</span>
+      <span>${t.emoji} ${t.title}</span>
+      ${seen.has(i)?'<span class="sb-done">✓</span>':''}
+    </div>`;
+  });
+  el.innerHTML = html;
+  const pct = Math.round(seen.size/topics.length*100);
+  document.getElementById('pb').style.width = pct+'%';
+  document.getElementById('pb-label').textContent = `${seen.size} / ${topics.length} topics`;
+}
+
+// ─── ACID CARDS ──────────────────────────────────────────────────────────────
+function acidCards() {
+  const props = [
+    {l:'A', name:'Atomicity',
+     one:'All or nothing.',
+     def:'Every statement in a transaction either ALL succeed or ALL roll back. No partial updates survive.'},
+    {l:'C', name:'Consistency',
+     one:'Valid state → valid state.',
+     def:'A transaction can only bring the DB from one valid state to another. Constraints, cascades, and rules are always respected.'},
+    {l:'I', name:'Isolation',
+     one:'Concurrent ≠ interfering.',
+     def:'Transactions running in parallel behave as if they ran sequentially. One transaction cannot read another\'s uncommitted changes.'},
+    {l:'D', name:'Durability',
+     one:'Committed = permanent.',
+     def:'Once COMMIT succeeds, the data survives crashes, power failures, and restarts — written to disk via the redo log.'},
+  ];
+  return `<div class="acid-grid">${props.map(p=>`
+    <div class="acid-card">
+      <div class="acid-letter">${p.l}</div>
+      <div class="acid-name">${p.name}</div>
+      <div class="acid-one">${p.one}</div>
+      <div class="acid-def">${p.def}</div>
+    </div>`).join('')}</div>
+  <table class="iso-table" style="margin-top:16px">
+    <tr><th>Isolation Level</th><th>Dirty Read</th><th>Non-Repeatable</th><th>Phantom</th></tr>
+    <tr><td>READ UNCOMMITTED</td><td class="cross">✗ possible</td><td class="cross">✗ possible</td><td class="cross">✗ possible</td></tr>
+    <tr><td>READ COMMITTED</td><td class="tick">✓ prevented</td><td class="cross">✗ possible</td><td class="cross">✗ possible</td></tr>
+    <tr><td>REPEATABLE READ <em style="color:var(--acc);font-size:10px">(MySQL default)</em></td><td class="tick">✓ prevented</td><td class="tick">✓ prevented</td><td class="cross">✗ possible</td></tr>
+    <tr><td>SERIALIZABLE</td><td class="tick">✓ prevented</td><td class="tick">✓ prevented</td><td class="tick">✓ prevented</td></tr>
+  </table>`;
+}
+
+// ─── NORMALIZATION ROWS ───────────────────────────────────────────────────────
+function nfRows() {
+  const nfs = [
+    {tag:'1NF',rule:'Atomic values + no repeating groups',
+     desc:'Each cell contains one indivisible value. No "product1, product2" columns. Every row is unique (has a PK). No arrays or lists inside a cell.'},
+    {tag:'2NF',rule:'No partial dependency on composite PK',
+     desc:'Every non-key column depends on the WHOLE primary key. Applies only when PK spans multiple columns. order_items.price depends on (order_id, product_id) — not just one of them.'},
+    {tag:'3NF',rule:'No transitive dependency',
+     desc:'No non-key column depends on another non-key column. If orders stored customer_city, then city → customer_id → order_id would be transitive. Move city to the customers table.'},
+    {tag:'BCNF',rule:'Every determinant is a candidate key',
+     desc:'Stricter 3NF. If X → Y and X is not a superkey, move X and Y to a separate table. Eliminates edge-case anomalies 3NF misses.'},
+  ];
+  return nfs.map(n=>`
+    <div class="nf-row">
+      <div class="nf-tag">${n.tag}</div>
+      <div class="nf-body">
+        <div class="nf-rule">${n.rule}</div>
+        <div class="nf-desc">${n.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── RENDER CONTENT ───────────────────────────────────────────────────────────
+function renderContent(i) {
+  const t = topics[i];
+  const showSchema = i >= 4;
+  return `
+    <div class="t-head">
+      <span class="t-emoji">${t.emoji}</span>
+      <div>
+        <div class="t-num">Topic ${t.id} of ${topics.length} · ${t.g}</div>
+        <div class="t-name">${t.title}</div>
+      </div>
+      <div class="t-nav">
+        <button class="nav-btn" onclick="goto(${i-1})" ${i===0?'disabled':''}>← Prev</button>
+        <button class="nav-btn" onclick="goto(${i+1})" ${i===topics.length-1?'disabled':''}>Next →</button>
+      </div>
+    </div>
+    <div class="t-body">
+      <div class="def-card">
+        <span class="def-ic">💡</span>
+        <div class="def-txt"><strong>${t.title}:</strong> ${t.def}</div>
+      </div>
+
+      ${showSchema ? SCHEMA : ''}
+      ${i > 0 ? CNOTE : ''}
+
+      <div class="sec">
+        <div class="sec-label">📌 Syntax</div>
+        ${t.syntax}
+      </div>
+
+      ${t.acid ? `<div class="sec"><div class="sec-label">🧱 The Four Guarantees + Isolation Levels</div>${acidCards()}</div>` : ''}
+      ${t.normalization ? `<div class="sec"><div class="sec-label">📐 Normal Forms</div>${nfRows()}</div>` : ''}
+
+      <div class="sec">
+        <div class="sec-label">🏪 Real-World Example — TechMart</div>
+        ${t.example}
+      </div>
+
+      <div class="sec">
+        <div class="sec-label">💼 Real-World Use Case</div>
+        <div class="uc">${t.uc}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function goto(i) {
+  if (i < 0 || i >= topics.length) return;
+  cur = i;
+  seen.add(i);
+  document.getElementById('content').innerHTML = renderContent(i);
+  document.getElementById('main').scrollTo({top:0,behavior:'smooth'});
+  renderSidebar();
+}
+
+goto(0);
+</script>
+</body>
+</html>
